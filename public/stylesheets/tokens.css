@@ -1,0 +1,52 @@
+:root {
+  /* Spacing System */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+
+  /* Color Palette */
+  --primary: #191970;
+  --primary-light: rgba(25, 25, 112, 0.1);
+  --primary-hover: rgba(255, 255, 255, 0.15);
+
+  --danger: #d32f2f;
+  --warning: #ff8c00;
+  --success: #388e3c;
+  --info: #1976d2;
+
+  --text-primary: #333;
+  --text-secondary: #666;
+  --text-light: #757575;
+
+  --border-color: #d0d5dd;
+  --border-light: #e0e0e0;
+
+  /* Backgrounds */
+  --bg-white: white;
+  --bg-card: rgba(255, 165, 0, 0.05);
+
+  /* Layout & Sizing */
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-xs: 4px;
+  --border-width: 1px;
+  --border: var(--border-width) solid var(--border-color);
+
+  --input-height: 20px;
+  --label-width: 140px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition: all 0.2s ease;
+
+  /* Legacy support - to be removed after migration */
+  --gap: var(--space-xs);
+  --label-w: var(--label-width);
+  --control-h: var(--input-height);
+  --primary-color: var(--primary);
+}

@@ -1,0 +1,60 @@
+form.crud-form {
+  display: grid;
+  gap: var(--space-xs);
+  max-width: 400px;
+  padding: var(--space-xl);
+  background: var(--bg-white);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.field {
+  display: grid;
+  grid-template-columns: var(--label-width) 1fr;
+  align-items: center;
+  justify-content: start;
+  gap: var(--space-xs);
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+input,
+select {
+  width: 100%;
+  font: inherit;
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-sm);
+  box-sizing: border-box;
+  min-height: 32px;
+}
+@media (max-width: 560px) {
+  .field {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Checkbox-specific styling */
+input[type="checkbox"] {
+  width: var(--input-height);
+  height: var(--input-height);
+  cursor: pointer;
+  accent-color: var(--primary);
+  justify-self: start;
+}
+
+/* Better alignment for checkbox fields */
+.field:has(input[type="checkbox"]) {
+  align-items: center;
+}
+
+/* Make the label clickable for better UX */
+.field:has(input[type="checkbox"]) label {
+  cursor: pointer;
+}

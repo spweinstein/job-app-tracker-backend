@@ -1,0 +1,43 @@
+.job-list {
+  max-width: 800px;
+  margin: var(--space-xl) var(--space-xl);
+  padding: 0;
+  display: grid;
+  gap: var(--space-md);
+}
+
+.job-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-white);
+  transition: var(--transition);
+}
+
+.job-item:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.job-info {
+  flex: 1;
+}
+
+.job-info h3 {
+  margin: 0 0 var(--space-xs) 0;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.job-info .company {
+  margin: 0 0 var(--space-sm) 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.job-meta {
+  display: flex;
+  gap: var(--space-sm);
+}

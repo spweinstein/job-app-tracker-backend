@@ -1,0 +1,74 @@
+/* Base Badge Styles */
+.badge,
+.status,
+.priority {
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+/* Badge Variants */
+.badge-info {
+  background: #e3f2fd;
+  color: var(--info);
+}
+
+.badge-warning {
+  background: #fff3e0;
+  color: var(--warning);
+}
+
+.badge-success {
+  background: #e8f5e9;
+  color: var(--success);
+}
+
+.badge-danger {
+  background: #ffebee;
+  color: var(--danger);
+}
+
+.badge-neutral {
+  background: #f5f5f5;
+  color: var(--text-light);
+}
+
+/* Status-specific classes (for backwards compatibility) */
+.status-applied {
+  background: #e3f2fd;
+  color: var(--info);
+}
+
+.status-interviewing {
+  background: #fff3e0;
+  color: var(--warning);
+}
+
+.status-offer {
+  background: #e8f5e9;
+  color: var(--success);
+}
+
+.status-rejected {
+  background: #ffebee;
+  color: var(--danger);
+}
+
+/* Priority-specific classes */
+.priority-low {
+  background: #f5f5f5;
+  color: var(--text-light);
+}
+
+.priority-medium {
+  background: #fff9c4;
+  color: #f57f17;
+}
+
+.priority-high {
+  background: #ffcdd2;
+  color: #c62828;
+}

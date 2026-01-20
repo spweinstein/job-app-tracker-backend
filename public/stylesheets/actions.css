@@ -1,0 +1,19 @@
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  justify-content: flex-start;
+}
+
+.actions form {
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .actions {
+    justify-content: stretch;
+  }
+  .actions button {
+    flex: 1;
+  }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/list.css" />
+  </head>
+  <body>
+    <%- include('../partials/nav.ejs')%>
+    <div class="content">
+      <h1><%= pageTitle %></h1>
+      <div class="job-list">
+        <% jobApps.forEach(app=>{ %>
+        <div class="job-item">
+          <div class="job-info">
+            <h3><%= app.title %></h3>
+            <p class="company"><%= app.company %></p>
+            <div class="job-meta">
+              <span class="status status-<%= app.status.toLowerCase() %>"
+                ><%= app.status %></span
+              >
+              <span class="priority priority-<%= app.priority.toLowerCase() %>"
+                ><%= app.priority %></span
+              >
+            </div>
+          </div>
+          <div class="actions">
+            <a href="/jobApps/<%=app._id%>" class="btn btn-view">View</a>
+            <a href="/jobApps/<%=app._id%>/edit" class="btn btn-edit">Edit</a>
+            <form action="/jobApps/<%=app._id%>?_method=DELETE" method="POST">
+              <button type="submit" class="btn btn-delete">Delete</button>
+            </form>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </body>
+</html>

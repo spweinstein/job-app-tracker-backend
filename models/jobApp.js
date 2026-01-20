@@ -1,0 +1,36 @@
+const mongoose = require("mongoose");
+
+const jobAppSchema = new mongoose.Schema(
+  {
+    company: String,
+    title: String,
+    status: {
+      type: String,
+      enum: ["Applied", "Interviewing", "Offer", "Rejected"],
+      default: "Applied",
+    },
+    priority: {
+      type: String,
+      enum: ["Low", "Medium", "High"],
+      default: "Low",
+    },
+    source: {
+      type: String,
+      enum: ["LinkedIn", "Indeed", "Company Site", "Networking"],
+      default: "Indeed",
+    },
+    appliedAt: {
+      type: Date,
+      default: Date.now,
+      index: true,
+    },
+    archived: {
+      type: Boolean,
+      default: false,
+    },
+    url: String,
+  },
+  { timestamps: true },
+);
+
+module.exports = mongoose.model("JobApp", jobAppSchema);

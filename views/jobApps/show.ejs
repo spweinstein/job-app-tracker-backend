@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/card.css" />
+  </head>
+  <body>
+    <%- include('../partials/nav.ejs');%>
+    <div class="content">
+      <h1>Job Application</h1>
+      <div class="card">
+        <div class="card-header">
+          <div><strong>Company:</strong> <%= jobApp.company %></div>
+          <div><strong>Job Title:</strong> <%= jobApp.title %></div>
+        </div>
+        <div><strong>Status:</strong> <span class="status status-<%= jobApp.status.toLowerCase() %>"><%= jobApp.status %></span></div>
+        <div><strong>Priority:</strong> <span class="priority priority-<%= jobApp.priority.toLowerCase() %>"><%= jobApp.priority %></span></div>
+        <div><strong>Source:</strong> <%= jobApp.source %></div>
+        <div>
+          <strong>Applied At:</strong> <%= new
+          Date(jobApp.appliedAt).toLocaleDateString() %>
+        </div>
+        <div>
+          <strong>Archived:</strong> <%= jobApp.archived ? 'Yes' : 'No' %>
+        </div>
+        <% if(jobApp.url){ %>
+        <div>
+          <strong>Link:</strong>
+          <a href="<%= jobApp.url %>" target="_blank">View Application</a>
+        </div>
+        <% } %>
+        <div class="card-actions">
+          <a href="/jobApps/<%=jobApp._id%>/edit" class="btn btn-edit">Edit</a>
+          <form action="/jobApps/<%=jobApp._id%>?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn-delete">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

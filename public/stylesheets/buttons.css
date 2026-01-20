@@ -1,0 +1,83 @@
+/* Base Button Styles */
+.btn,
+button {
+  font: inherit;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  border: 2px solid;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-white);
+}
+
+/* Primary Button (default) */
+.btn-primary,
+.btn-edit,
+button[type="submit"]:not(.btn-delete) {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover,
+.btn-edit:hover,
+button[type="submit"]:not(.btn-delete):hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Danger/Delete Button */
+.btn-danger,
+.btn-delete {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn-danger:hover,
+.btn-delete:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* Warning Button */
+.btn-warning,
+.btn-view {
+  color: var(--warning);
+  border-color: var(--warning);
+}
+
+.btn-warning:hover,
+.btn-view:hover {
+  background: var(--warning);
+  color: white;
+}
+
+/* Button Sizes */
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.btn-lg {
+  padding: 12px 20px;
+  font-size: 16px;
+}
+
+/* Button Layout */
+button[type="submit"] {
+  justify-self: end;
+  min-width: 120px;
+}
+
+/* Responsive Button Groups */
+@media (max-width: 560px) {
+  .actions button,
+  .card-actions button {
+    flex: 1;
+  }
+}
