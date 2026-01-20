@@ -2,7 +2,7 @@
 .btn,
 button {
   font: inherit;
-  padding: 5px 8px;
+  /* padding: 5px 8px; */
   border-radius: var(--radius-sm);
   border: 2px solid;
   cursor: pointer;
@@ -19,14 +19,14 @@ button {
 /* Primary Button (default) */
 .btn-primary,
 .btn-edit,
-button[type="submit"]:not(.btn-delete) {
+button[type="submit"]:not(.btn-delete):not(.btn-danger) {
   color: var(--primary);
   border-color: var(--primary);
 }
 
 .btn-primary:hover,
 .btn-edit:hover,
-button[type="submit"]:not(.btn-delete):hover {
+button[type="submit"]:not(.btn-delete):not(.btn-danger):hover {
   background: var(--primary);
   color: white;
 }
@@ -59,7 +59,7 @@ button[type="submit"]:not(.btn-delete):hover {
 
 /* Button Sizes */
 .btn-sm {
-  padding: 8px 12px;
+  padding: 2px 3px;
   font-size: 14px;
 }
 
@@ -71,7 +71,7 @@ button[type="submit"]:not(.btn-delete):hover {
 /* Button Layout */
 button[type="submit"] {
   justify-self: end;
-  min-width: 120px;
+  /* min-width: 120px; */
 }
 
 /* Responsive Button Groups */

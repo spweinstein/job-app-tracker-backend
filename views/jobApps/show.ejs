@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
-    <link rel="stylesheet" href="/stylesheets/card.css" />
   </head>
   <body>
     <%- include('../partials/nav.ejs');%>
-    <div class="content">
-      <h1>Job Application</h1>
+    
+    <main class="page-container">
+      <header class="page-header">
+        <h1>Job Application</h1>
+      </header>
+
       <div class="card">
         <div class="card-header">
           <div><strong>Company:</strong> <%= jobApp.company %></div>
@@ -32,13 +35,13 @@
           <a href="<%= jobApp.url %>" target="_blank">View Application</a>
         </div>
         <% } %>
-        <div class="card-actions">
-          <a href="/jobApps/<%=jobApp._id%>/edit" class="btn btn-edit">Edit</a>
+        <div class="actions">
+          <a href="/jobApps/<%=jobApp._id%>/edit" class="btn btn-primary btn-sm">Edit</a>
           <form action="/jobApps/<%=jobApp._id%>?_method=DELETE" method="POST">
-            <button type="submit" class="btn btn-delete">Delete</button>
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
           </form>
         </div>
       </div>
-    </div>
+    </main>
   </body>
 </html>

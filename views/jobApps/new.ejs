@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
-    <link rel="stylesheet" href="/stylesheets/form.css" />
   </head>
   <body>
     <%- include('../partials/nav.ejs'); %>
-    <div class="content">
-      <h1><%= pageTitle %></h1>
+
+    <main class="page-container">
+      <header class="page-header">
+        <h1><%= pageTitle %></h1>
+      </header>
+
       <form class="crud-form" action="/jobApps" method="POST">
         <div class="field">
           <label for="company">Company</label>
@@ -46,7 +49,6 @@
             <option value="High">High</option>
           </select>
         </div>
-
         <div class="field">
           <label for="url">Link</label>
           <input type="text" name="url" id="url" />
@@ -63,6 +65,6 @@
           <button type="submit">Add New Application</button>
         </div>
       </form>
-    </div>
+    </main>
   </body>
 </html>

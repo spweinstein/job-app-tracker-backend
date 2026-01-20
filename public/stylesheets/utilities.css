@@ -1,3 +1,26 @@
+/* Page Layout */
+.page-container {
+  max-width: 1200px;
+  margin: 0 0;
+  padding: var(--space-xl);
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  background: var(--border-light);
+  padding: var(--space-lg);
+  border-radius: var(--radius-sm);
+}
+
+.page-header h1 {
+  margin: 0;
+  padding: 0;
+}
+
 /* Grid Pattern Utilities */
 .grid-label-value {
   display: grid;

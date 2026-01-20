@@ -2,7 +2,7 @@
   max-width: 400px;
   padding: var(--space-xl);
   border: var(--border);
-  border-radius: var(--radius);
+  /* border-radius: var(--radius); */
   background: var(--bg-white);
   box-shadow: var(--shadow-sm);
   display: grid;

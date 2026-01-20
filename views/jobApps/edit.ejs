@@ -68,7 +68,7 @@
         </div>
         <div class="field">
           <label for="appliedAt">Application Date</label>
-          <input type="date" name="appliedAt" id="appliedAt" value="<%= jobApp.appliedAt.toISOString().slice(0,10)%>"/>
+          <input type="date" name="appliedAt" id="appliedAt" value="<%= (jobApp.appliedAt).toISOString().slice(0,10)%>"/>
         </div>
         <div class="actions">
           <button type="submit">Save Application</button>
