@@ -12,5 +12,5 @@ router.get("/", (req, res) => {
 
 router.use("/auth", authRoutes);
 router.use("/jobApps", authMiddlewares.isSignedIn, jobAppRoutes);
-// router.use("/companies", authMiddlewares.isSignedIn
+router.use("/companies", authMiddlewares.isSignedIn, companyRoutes);
 module.exports = router;

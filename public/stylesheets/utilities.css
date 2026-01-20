@@ -1,7 +1,6 @@
 /* Page Layout */
 .page-container {
   max-width: 1200px;
-  margin: 0 0;
   padding: var(--space-xl);
 }
 
@@ -19,42 +18,6 @@
 .page-header h1 {
   margin: 0;
   padding: 0;
-}
-
-/* Grid Pattern Utilities */
-.grid-label-value {
-  display: grid;
-  grid-template-columns: var(--label-width) 1fr;
-  gap: var(--space-sm);
-  align-items: center;
-}
-
-@media (max-width: 560px) {
-  .grid-label-value {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Divider Utilities */
-.divider-bottom {
-  border-bottom: 1px solid var(--border-light);
-  padding-bottom: var(--space-md);
-  margin-bottom: var(--space-sm);
-}
-
-.divider-top {
-  border-top: 1px solid var(--border-light);
-  padding-top: var(--space-md);
-  margin-top: var(--space-md);
-}
-
-/* Container Base */
-.container-base {
-  padding: var(--space-xl);
-  background: var(--bg-white);
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
 }
 
 /* Focus States */

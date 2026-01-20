@@ -2,7 +2,6 @@
 .btn,
 button {
   font: inherit;
-  /* padding: 5px 8px; */
   border-radius: var(--radius-sm);
   border: 2px solid;
   cursor: pointer;
@@ -18,7 +17,6 @@ button {
 
 /* Primary Button (default) */
 .btn-primary,
-.btn-edit,
 button[type="submit"]:not(.btn-delete):not(.btn-danger) {
   color: var(--primary);
   border-color: var(--primary);
@@ -45,8 +43,7 @@ button[type="submit"]:not(.btn-delete):not(.btn-danger):hover {
 }
 
 /* Warning Button */
-.btn-warning,
-.btn-view {
+.btn-warning {
   color: var(--warning);
   border-color: var(--warning);
 }
@@ -66,18 +63,4 @@ button[type="submit"]:not(.btn-delete):not(.btn-danger):hover {
 .btn-lg {
   padding: 12px 20px;
   font-size: 16px;
-}
-
-/* Button Layout */
-button[type="submit"] {
-  justify-self: end;
-  /* min-width: 120px; */
-}
-
-/* Responsive Button Groups */
-@media (max-width: 560px) {
-  .actions button,
-  .card-actions button {
-    flex: 1;
-  }
 }

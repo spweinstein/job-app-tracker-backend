@@ -15,8 +15,6 @@
         <a class="btn btn-primary btn-lg" href="/jobApps/new">+ ADD JOB APPLICATION</a>
       </header>
 
-      <input type="search" class="search-bar" placeholder="SEARCH / FILTER">
-
       <div class="table-container">
         <div class="table-header">
           <div>Job Title</div>
@@ -31,8 +29,8 @@
           <div class="table-row">
             <div><%= app.title %></div>
             <div><%= app.company %></div>
-            <div><%= app.status %></div>
-            <div><%= app.priority %></div>
+            <div><span class="status status-<%= app.status.toLowerCase()%>"><%= app.status %></span></div>
+            <div><span class="priority priority-<%= app.priority.toLowerCase()%>"><%= app.priority %></span></div>
             <div class="actions">
               <a href="/jobApps/<%=app._id%>" class="btn btn-warning btn-sm">View</a>
               <a href="/jobApps/<%=app._id%>/edit" class="btn btn-primary btn-sm">Edit</a>

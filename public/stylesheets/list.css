@@ -1,23 +1,7 @@
-/* Search Bar */
-.search-bar {
-  width: 100%;
-  padding: var(--space-md);
-  margin-bottom: var(--space-lg);
-  border: var(--border);
-  border-radius: var(--radius-sm);
-  font: inherit;
-  font-size: 14px;
-}
-
-.search-bar::placeholder {
-  color: var(--text-light);
-}
-
 /* Table Container - Define Grid Once */
 .table-container {
   border: var(--border);
   border-radius: var(--radius-sm);
-  overflow: hidden;
   background: var(--bg-white);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr auto;
@@ -34,105 +18,27 @@
   font-size: 12px;
   color: var(--text-primary);
   padding: var(--space-lg);
-  display: flex;
-  align-items: center;
 }
 
-/* Table Body */
+/* ensure that table body and rows participate in the grid system */
 .table-body {
   display: contents;
 }
 
-/* Table Row */
 .table-row {
   display: contents;
 }
 
 .table-row > div {
-  padding: var(--space-lg);
+  padding: var(--space-md);
   border-top: var(--border);
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: var(--transition);
-}
-
-.table-row:first-child > div {
-  border-top: none;
 }
 
 .table-row:hover > div {
   background: var(--primary-light);
 }
 
-/* Actions Column */
-.table-row .actions {
-  gap: var(--space-sm);
-  justify-content: flex-start;
-}
-
+/* Make the delete button participate in the flex layout with view/edit */
 .table-row .actions form {
   display: contents;
-}
-
-/* Responsive Layout */
-@media (max-width: 768px) {
-  .table-container {
-    display: block;
-  }
-
-  .table-header {
-    display: none;
-  }
-
-  .table-row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-sm);
-    padding: var(--space-lg);
-    border-top: var(--border);
-  }
-
-  .table-row:first-child {
-    border-top: none;
-  }
-
-  .table-row > div {
-    border: none;
-    padding: 0;
-  }
-
-  .table-row > div:nth-child(1)::before {
-    content: "Title: ";
-    font-weight: 600;
-  }
-  .table-row > div:nth-child(2)::before {
-    content: "Company: ";
-    font-weight: 600;
-  }
-  .table-row > div:nth-child(3)::before {
-    content: "Status: ";
-    font-weight: 600;
-  }
-  .table-row > div:nth-child(4)::before {
-    content: "Priority: ";
-    font-weight: 600;
-  }
-
-  .table-row .actions {
-    justify-content: stretch;
-    margin-top: var(--space-sm);
-  }
-
-  .table-row .actions form {
-    display: block;
-    flex: 1;
-  }
-
-  .table-row .actions a,
-  .table-row .actions button {
-    flex: 1;
-  }
 }

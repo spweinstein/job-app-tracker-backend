@@ -7,7 +7,6 @@
 @import url("./card.css");
 @import url("./form.css");
 @import url("./list.css");
-@import url("./actions.css");
 
 h1 {
   color: var(--primary);

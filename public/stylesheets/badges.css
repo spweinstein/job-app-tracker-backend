@@ -1,5 +1,4 @@
 /* Base Badge Styles */
-.badge,
 .status,
 .priority {
   padding: 4px 8px;
@@ -7,36 +6,10 @@
   font-size: 12px;
   font-weight: 600;
   text-transform: capitalize;
-  display: inline-block;
+  width: fit-content;
 }
 
-/* Badge Variants */
-.badge-info {
-  background: #e3f2fd;
-  color: var(--info);
-}
-
-.badge-warning {
-  background: #fff3e0;
-  color: var(--warning);
-}
-
-.badge-success {
-  background: #e8f5e9;
-  color: var(--success);
-}
-
-.badge-danger {
-  background: #ffebee;
-  color: var(--danger);
-}
-
-.badge-neutral {
-  background: #f5f5f5;
-  color: var(--text-light);
-}
-
-/* Status-specific classes (for backwards compatibility) */
+/* Status-specific classes */
 .status-applied {
   background: #e3f2fd;
   color: var(--info);

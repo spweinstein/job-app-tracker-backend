@@ -43,10 +43,4 @@
 
   /* Transitions */
   --transition: all 0.2s ease;
-
-  /* Legacy support - to be removed after migration */
-  --gap: var(--space-xs);
-  --label-w: var(--label-width);
-  --control-h: var(--input-height);
-  --primary-color: var(--primary);
 }

@@ -12,31 +12,29 @@
     <main class="page-container">
       <header class="page-header">
         <h1><%= pageTitle %></h1>
-        <a class="btn btn-primary btn-lg" href="/jobApps/new">+ ADD JOB APPLICATION</a>
+        <a class="btn btn-primary btn-lg" href="/companies/new">+ ADD COMPANY</a>
       </header>
-
-      <input type="search" class="search-bar" placeholder="SEARCH / FILTER">
 
       <div class="table-container">
         <div class="table-header">
-          <div>Job Title</div>
           <div>Company</div>
-          <div>Status</div>
-          <div>Priority</div>
+          <div>Website</div>
+          <div>Description</div>
+          <div>Notes</div>
           <div>Actions</div>
         </div>
 
         <div class="table-body">
-          <% jobApps.forEach(app => { %>
+          <% companies.forEach(company => { %>
           <div class="table-row">
-            <div><%= app.title %></div>
-            <div><%= app.company %></div>
-            <div><%= app.status %></div>
-            <div><%= app.priority %></div>
+            <div><%= company.name %></div>
+            <div><%= company.website %></div>
+            <div><%= company.description %></div>
+            <div><%= company.notes %></div>
             <div class="actions">
-              <a href="/jobApps/<%=app._id%>" class="btn btn-warning btn-sm">View</a>
-              <a href="/jobApps/<%=app._id%>/edit" class="btn btn-primary btn-sm">Edit</a>
-              <form action="/jobApps/<%=app._id%>?_method=DELETE" method="POST">
+              <a href="/companies/<%=company._id%>" class="btn btn-warning btn-sm">View</a>
+              <a href="/companies/<%=company._id%>/edit" class="btn btn-primary btn-sm">Edit</a>
+              <form action="/companies/<%=company._id%>?_method=DELETE" method="POST">
                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
               </form>
             </div>

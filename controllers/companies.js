@@ -5,7 +5,7 @@ const renderIndex = async (req, res) => {
   const companies = await Company.find({
     user: req.session.user._id,
   });
-  res.render("company/index.ejs", { companies });
+  res.render("companies/index.ejs", { companies, pageTitle: "Companies" });
 };
 
 const renderNewCompanyForm = (req, res) => {};
