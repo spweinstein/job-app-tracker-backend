@@ -8,6 +8,7 @@ const renderIndex = async (req, res) => {
     user: req.session.user._id,
   });
   await JobApp.populate(jobApps, { path: "company" });
+  console.log(jobApps);
 
   res.render("./jobApps/index.ejs", {
     pageTitle: "Job Applications",
