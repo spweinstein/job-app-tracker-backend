@@ -16,4 +16,7 @@ const companySchema = new mongoose.Schema({
   notes: String,
 });
 
+// Enforce uniqueness on the pair user, name (user model, company name pair must be unique)
+companySchema.index({ user: 1, name: 1 }, { unique: true });
+
 module.exports = mongoose.model("Company", companySchema);
