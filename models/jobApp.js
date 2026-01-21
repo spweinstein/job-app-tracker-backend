@@ -3,12 +3,16 @@ const mongoose = require("mongoose");
 const jobAppSchema = new mongoose.Schema(
   {
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-        index: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
     },
-    company: String,
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
+    },
     title: String,
     status: {
       type: String,

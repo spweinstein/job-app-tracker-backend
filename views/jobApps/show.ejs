@@ -10,13 +10,10 @@
     <%- include('../partials/nav.ejs');%>
     
     <main class="page-container">
-      <header class="page-header">
-        <h1>Job Application</h1>
-      </header>
-
+      <%- include('../partials/pageHeader.ejs'); %>
       <div class="card">
         <div class="card-header">
-          <div><strong>Company:</strong> <%= jobApp.company %></div>
+          <div><strong>Company:</strong> <%= jobApp.company.name %></div>
           <div><strong>Job Title:</strong> <%= jobApp.title %></div>
         </div>
         <div><strong>Status:</strong> <span class="status status-<%= jobApp.status.toLowerCase() %>"><%= jobApp.status %></span></div>

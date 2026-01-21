@@ -10,14 +10,16 @@
     <%- include('../partials/nav.ejs'); %>
 
     <main class="page-container">
-      <header class="page-header">
-        <h1><%= pageTitle %></h1>
-      </header>
+      <%- include('../partials/pageHeader.ejs'); %>
 
       <form class="crud-form" action="/jobApps" method="POST">
         <div class="field">
           <label for="company">Company</label>
-          <input type="text" name="company" id="company" />
+          <select name="company" id="company">
+            <% for(let i = 0; i < companies.length; i ++){ %>
+              <option value="<%= companies[i].id %>"><%= companies[i].name %></option>
+            <% } %>
+          </select>
         </div>
         <div class="field">
           <label for="title">Job Title</label>

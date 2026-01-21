@@ -2,15 +2,15 @@ form.crud-form {
   max-width: 400px;
 }
 
-label {
+.field label {
   font-size: 14px;
   font-weight: 600;
   line-height: 1.2;
   color: var(--text-primary);
 }
 
-input,
-select {
+.field input,
+.field select {
   width: 100%;
   font: inherit;
   border: var(--border);
@@ -20,7 +20,7 @@ select {
 }
 
 /* Checkbox-specific styling */
-input[type="checkbox"] {
+.field input[type="checkbox"] {
   width: var(--input-height);
   height: var(--input-height);
   cursor: pointer;
@@ -34,10 +34,10 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
-input[type="checkbox"]:focus-visible {
+.field input[type="checkbox"]:focus-visible {
   outline: 2px solid var(--primary);
 }
 
-button[type="submit"] {
+.crud-form button[type="submit"] {
   margin-top: var(--space-md);
 }

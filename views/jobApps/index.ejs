@@ -10,10 +10,9 @@
     <%- include('../partials/nav.ejs')%>
     
     <main class="page-container">
-      <header class="page-header">
-        <h1><%= pageTitle %></h1>
-        <a class="btn btn-primary btn-lg" href="/jobApps/new">+ ADD JOB APPLICATION</a>
-      </header>
+      <%- include('../partials/pageHeader.ejs'); %>
+      <a class="btn btn-primary btn-lg" href="/jobApps/new">+ ADD JOB APPLICATION</a>
+
 
       <div class="table-container">
         <div class="table-header">
@@ -28,7 +27,7 @@
           <% jobApps.forEach(app => { %>
           <div class="table-row">
             <div><%= app.title %></div>
-            <div><%= app.company %></div>
+            <div><%= app.company.name %></div>
             <div><span class="status status-<%= app.status.toLowerCase()%>"><%= app.status %></span></div>
             <div><span class="priority priority-<%= app.priority.toLowerCase()%>"><%= app.priority %></span></div>
             <div class="actions">
