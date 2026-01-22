@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs'); %>
+
+  <body>
+    <%- include('../partials/nav.ejs');%>
+    
+    <main class="page-container">
+      <%- include('../partials/pageHeader.ejs'); %>
+      <div class="card">
+        <div class="card-header">
+          <div><strong>Resume:</strong> <%= resume.name %></div>
+        </div>
+        <div><strong>Notes:</strong> <p><%=resume.notes%></p></div>
+        <% if(resume.link){ %>
+        <div>
+          <strong>Link:</strong>
+          <a href="<%= resume.link %>" target="_blank">View Resume</a>
+        </div>
+        <% } %>
+        <div class="actions">
+          <a href="/resumes/<%=resume._id%>/edit" class="btn btn-primary btn-sm">Edit</a>
+          <form action="/resumes/<%=resume._id%>?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

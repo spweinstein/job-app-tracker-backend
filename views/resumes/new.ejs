@@ -26,10 +26,16 @@
                     fieldLabel: "Notes",
                     fieldValue: ""
                 })%>
+
+                <%- include('./experiencePartial.ejs', {companies}); %>
+
+
                 <div class="actions">
-                <button type="submit">Add Application</button>
+                    <button type="submit">Add Resume</button>
                 </div>
             </form>
+
+
         </main>
     </body>
 </html>
