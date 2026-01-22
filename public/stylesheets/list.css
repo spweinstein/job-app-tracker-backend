@@ -4,7 +4,8 @@
   border-radius: var(--radius-sm);
   background: var(--bg-white);
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr auto;
+  --table-data-cols: 4;
+  grid-template-columns: repeat(var(--table-data-cols), minmax(0, 1fr)) auto;
 }
 
 /* Table Header */

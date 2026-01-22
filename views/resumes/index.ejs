@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs'); %>
+  <body>
+    <%- include('../partials/nav.ejs')%>
+
+    <main class="page-container">
+      <%- include('../partials/pageHeader.ejs'); %>
+      <a class="btn btn-primary btn-lg" href="/resumes/new">+ ADD RESUME</a>
+
+      <%- include('../components/tables/table.ejs', {
+        columnNames: ["Name", "Link", "Notes"],
+        columnPaths: ["name", "link", "notes"],
+        resourceName: "resumes",
+        rows: resumes
+      })%>
+    </main>
+  </body>
+</html>

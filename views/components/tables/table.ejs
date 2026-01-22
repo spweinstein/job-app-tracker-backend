@@ -1,7 +1,7 @@
 
 <!-- expects: columnNames, columnPaths, rows, resourceName -->
-<div class="table-container">
-    <div class="table-header">
+<div class="table-container" style="--table-data-cols:  <%=columnNames.length%>">
+    <div class="table-header" >
         <% for(let i = 0; i < columnNames.length; i ++){ %>
             <div><%= columnNames[i]%></div>
         <% } %>

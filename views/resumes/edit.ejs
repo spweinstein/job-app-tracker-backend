@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs'); %>
+
+    <body>
+        <%- include('../partials/nav.ejs'); %>
+
+        <main class="page-container">
+        <%- include('../partials/pageHeader.ejs'); %>
+
+            <form class="crud-form" action="/resumes" method="POST">
+                <%- include('../components/forms/textInput.ejs', {
+                    fieldName: "name",
+                    fieldLabel: "Name",
+                    fieldValue: resume.name
+                })%>
+
+                <%- include('../components/forms/textInput.ejs', {
+                    fieldName: "link",
+                    fieldLabel: "Link",
+                    fieldValue: resume.name
+                })%>
+
+                <%- include('../components/forms/textInput.ejs', {
+                    fieldName: "notes",
+                    fieldLabel: "Notes",
+                    fieldValue: resume.name
+                })%>
+                <div class="actions">
+                    <button type="submit">Add Application</button>
+                </div>
+            </form>
+        </main>
+    </body>
+</html>
