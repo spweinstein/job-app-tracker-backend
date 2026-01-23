@@ -12,7 +12,8 @@
                 <%- include('../components/forms/textInput.ejs', {
                     fieldName: "name",
                     fieldLabel: "Name",
-                    fieldValue: ""
+                    fieldValue: "",
+                    required: true
                 })%>
 
                 <%- include('../components/forms/textInput.ejs', {
@@ -27,12 +28,19 @@
                     fieldValue: ""
                 })%>
 
+                <div class="field">
+                    <label for="summary">Objective Statement</label>
+                    <textarea name="summary" id="summary"></textarea>
+                </div>
+
                 <%- include('./experiencePartial.ejs', {companies}); %>
+                <%- include('./educationPartial.ejs'); %>
 
 
                 <div class="actions">
                     <button type="submit">Add Resume</button>
                 </div>
+            <%-include('repeatableFieldGroup.ejs') %>
             </form>
 
 

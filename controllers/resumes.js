@@ -27,11 +27,14 @@ const renderEditResumeForm = async (req, res) => {
   const resume = await Resume.findOne({
     _id: req.params.id,
     user: req.session.user._id,
-  });
-  console.log(resume);
+  }).populate("experience.company");
+  const companies = await Company.find({ user: req.session.user._id });
+
+  console.log(resume.experience[0].company._id);
   res.render("./resumes/edit.ejs", {
     pageTitle: "Edit Resume",
     resume,
+    companies,
   });
 };
 
@@ -39,25 +42,7 @@ const createResume = async (req, res) => {
   req.body.user = req.session.user._id;
   console.log(req.body);
 
-  //   for (const experience of req.body.experience) {
-  //     if (experience.startDate === "") {
-  //       delete experience.startDate;
-  //     } else {
-  //       const date = new Date(experience.startDate);
-  //       date.setUTCHours(12, 0, 0, 0); // Set to noon UTC
-  //       experience.startDate = date;
-  //     }
-
-  //     if (experience.endDate === "") {
-  //       delete experience.endDate;
-  //     } else {
-  //       const date = new Date(experience.endDate);
-  //       date.setUTCHours(12, 0, 0, 0); // Set to noon UTC
-  //       experience.endDate = date;
-  //     }
-  //   }
-
-  console.log(req.body);
+  // console.log(req.body);
 
   await Resume.create(req.body);
   res.redirect("/resumes");
@@ -71,7 +56,7 @@ const updateResume = async (req, res) => {
     },
     req.body,
   );
-  res.redirect(`./resumes/${req.params.id}`);
+  res.redirect(`/resumes/${req.params.id}`);
 };
 
 const showResume = async (req, res) => {

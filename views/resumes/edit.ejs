@@ -8,7 +8,7 @@
         <main class="page-container">
         <%- include('../partials/pageHeader.ejs'); %>
 
-            <form class="crud-form" action="/resumes" method="POST">
+            <form class="crud-form" action="/resumes/<%=resume._id%>?_method=PUT" method="POST">
                 <%- include('../components/forms/textInput.ejs', {
                     fieldName: "name",
                     fieldLabel: "Name",
@@ -26,8 +26,21 @@
                     fieldLabel: "Notes",
                     fieldValue: resume.notes
                 })%>
+
+                <div class="field">
+                    <label for="summary">Objective Statement</label>
+                    <textarea name="summary" id="summary"></textarea>
+                </div>
+
+                <%- include('./experiencePartial.ejs', {companies, resume}); %>
+                <%- include('./educationPartial.ejs', {resume}); %>
+
+
+                <%-include('repeatableFieldGroup.ejs') %>
+
+
                 <div class="actions">
-                    <button type="submit">Add Application</button>
+                    <button type="submit">Save Application</button>
                 </div>
             </form>
         </main>
