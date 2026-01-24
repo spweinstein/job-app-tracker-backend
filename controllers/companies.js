@@ -78,7 +78,11 @@ const createCompany = async (req, res) => {
     name: req.body.name,
   });
   if (companyInDatabase) {
-    res.send(`Company ${req.body.name} already in database!`);
+    // res.send(`Company ${req.body.name} already in database!`);
+    res.render("companies/new.ejs", {
+      pageTitle: "New Company",
+      error: `Company ${req.body.name} already in database!`,
+    });
   } else {
     req.body.user = req.session.user._id;
     await Company.create(req.body);
@@ -106,7 +110,11 @@ const updateCompany = async (req, res) => {
 
   if (duplicateCompany) {
     // Could use flash messages, or for now, send error
-    return res.send(`A company named "${req.body.name}" already exists!`);
+    res.render("companies/edit.ejs", {
+      pageTitle: "Edit Company",
+      error: `Company ${req.body.name} already in database!`,
+      company: req.body,
+    });
   }
 
   await Company.findOneAndUpdate(
