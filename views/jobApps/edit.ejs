@@ -100,7 +100,7 @@
         <%- include('../partials/forms/dateInput.ejs', {
           fieldName: "appliedAt",
           fieldLabel: "Applied At",
-          fieldValue: new Date().toISOString().slice(0,10)
+          fieldValue: jobApp.appliedAt ? jobApp.appliedAt : new Date().toISOString().slice(0,10)
         }) %>
 
         <div class="actions">

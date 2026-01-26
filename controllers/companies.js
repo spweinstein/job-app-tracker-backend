@@ -116,21 +116,21 @@ const updateCompany = async (req, res) => {
 
   if (duplicateCompany) {
     // Could use flash messages, or for now, send error
-    res.render("companies/edit.ejs", {
+    return res.render("companies/edit.ejs", {
       pageTitle: "Edit Company",
       error: `Company ${req.body.name} already in database!`,
       company: req.body,
     });
+  } else {
+    await Company.findOneAndUpdate(
+      {
+        user: req.session.user._id,
+        _id: req.params.id,
+      },
+      req.body,
+    );
+    res.redirect("/companies");
   }
-
-  await Company.findOneAndUpdate(
-    {
-      user: req.session.user._id,
-      _id: req.params.id,
-    },
-    req.body,
-  );
-  res.redirect("/companies");
 };
 
 module.exports = {

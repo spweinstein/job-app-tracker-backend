@@ -39,10 +39,6 @@ const jobAppSchema = new mongoose.Schema(
       default: Date.now,
       index: true,
     },
-    archived: {
-      type: Boolean,
-      default: false,
-    },
     url: String,
   },
   { timestamps: true },
