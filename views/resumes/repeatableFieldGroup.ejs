@@ -24,26 +24,6 @@
       list.appendChild(fragment);
     }
 
-    function hydrateBlock(block, data, index) {
-      block.querySelectorAll("[name]").forEach((el) => {
-        const match = el.name.match(/\[(\w+)\]$/); // extract field name
-        if (!match) return;
-        const fieldName = match[1];
-
-        if (data[fieldName] !== undefined) {
-          if (el.tagName === "SELECT") {
-            el.value = String(data[fieldName]);
-          } else if (el.type === "month" && data[fieldName]) {
-            // Convert Date to YYYY-MM
-            const date = new Date(data[fieldName]);
-            el.value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-          } else {
-            el.value = data[fieldName] || "";
-          }
-        }
-      });
-    }
-
     list.addEventListener("click", (e) => {
       if (e.target.classList.contains(removeClass)) {
         e.target.closest(`.${blockClass}`).remove();
@@ -75,7 +55,6 @@
     }
 
     addBtn.addEventListener("click", () => {
-      console.log("adding click listener...");
       addBlock();
       reindexBlocks();
     });

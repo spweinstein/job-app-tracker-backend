@@ -4,13 +4,13 @@
         <% if (locals.resume && resume.experience && resume.experience.length > 0) { %>
             <% resume.experience.forEach((exp, index) => { %>
                 <div class="repeatable-block" data-index="<%= index %>">
-                    <%- include('../components/forms/selectInput.ejs', {
+                    <%- include('../partials/forms/selectInput.ejs', {
                         fieldName: `experience[${index}][company]`,
                         fieldLabel: "Company",
                         fieldValue: String(exp.company._id || exp.company),
                         fieldOptions: companies.map(c => ({value: String(c._id), label: c.name}))
                     })%>
-                    <%- include('../components/forms/textInput.ejs', {
+                    <%- include('../partials/forms/textInput.ejs', {
                         fieldName: `experience[${index}][title]`,
                         fieldLabel: "Job Title",
                         fieldValue: exp.title,
@@ -39,7 +39,7 @@
     
     <template class="repeatable-template">
         <div class="repeatable-block" data-index="__INDEX__">
-            <%- include('../components/forms/selectInput.ejs', {
+            <%- include('../partials/forms/selectInput.ejs', {
                 fieldName: "experience[__INDEX__][company]",
                 fieldLabel: "Company",
                 fieldValue: companies.length ? String(companies[0]._id) : "",

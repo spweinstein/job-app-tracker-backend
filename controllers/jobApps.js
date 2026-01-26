@@ -1,4 +1,3 @@
-// const User = require("../models/user.js");
 const JobApp = require("../models/jobApp.js");
 const Company = require("../models/company.js");
 const Resume = require("../models/resume.js");
@@ -61,7 +60,6 @@ const renderShowAppPage = async (req, res) => {
   })
     .populate("company")
     .populate("resume");
-  console.log(jobApp);
   res.render("./jobApps/show.ejs", {
     pageTitle: `View Job App`,
     jobApp,
@@ -83,8 +81,6 @@ const renderEditAppForm = async (req, res) => {
     user: req.session.user._id,
   });
 
-  console.log(jobApp);
-
   res.render("./jobApps/edit.ejs", {
     pageTitle: "Edit Job App",
     jobApp,
@@ -95,7 +91,6 @@ const renderEditAppForm = async (req, res) => {
 
 // POST "/jobApps/"
 const createApp = async (req, res) => {
-  //   console.log(req.body);
   req.body.archived = req.body.archived === "on" ? true : false;
   req.body.user = req.session.user._id;
   // Remove appliedAt if it's an empty string
@@ -121,9 +116,7 @@ const deleteApp = async (req, res) => {
 
 // PUT "/jobApps/:id"
 const updateApp = async (req, res) => {
-  console.log(req.body);
   req.body.archived = req.body.archived === "on" ? true : false;
-  //   await JobApp.findByIdAndUpdate(req.params.id, req.body);
   // Remove appliedAt if it's an empty string
   if (req.body.appliedAt === "") {
     delete req.body.appliedAt;

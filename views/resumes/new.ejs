@@ -9,20 +9,20 @@
         <%- include('../partials/pageHeader.ejs'); %>
 
             <form class="crud-form" action="/resumes" method="POST">
-                <%- include('../components/forms/textInput.ejs', {
+                <%- include('../partials/forms/textInput.ejs', {
                     fieldName: "name",
                     fieldLabel: "Name",
                     fieldValue: "",
                     required: true
                 })%>
 
-                <%- include('../components/forms/textInput.ejs', {
+                <%- include('../partials/forms/textInput.ejs', {
                     fieldName: "link",
                     fieldLabel: "Link",
                     fieldValue: ""
                 })%>
 
-                <%- include('../components/forms/textInput.ejs', {
+                <%- include('../partials/forms/textInput.ejs', {
                     fieldName: "notes",
                     fieldLabel: "Notes",
                     fieldValue: ""

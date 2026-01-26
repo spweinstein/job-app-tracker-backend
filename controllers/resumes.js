@@ -51,7 +51,6 @@ const renderEditResumeForm = async (req, res) => {
   }).populate("experience.company");
   const companies = await Company.find({ user: req.session.user._id });
 
-  console.log(resume.experience[0].company._id);
   res.render("./resumes/edit.ejs", {
     pageTitle: "Edit Resume",
     resume,
@@ -61,7 +60,6 @@ const renderEditResumeForm = async (req, res) => {
 
 const createResume = async (req, res) => {
   req.body.user = req.session.user._id;
-  console.log(req.body);
 
   await Resume.create(req.body);
   res.redirect("/resumes");

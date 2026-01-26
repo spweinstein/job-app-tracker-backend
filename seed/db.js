@@ -16,11 +16,11 @@ const seedDatabase = async () => {
     await JobApp.deleteMany({});
     console.log("Cleared existing data");
 
-    // Create demo user
+    // Find demo user
     const demoUser = await User.findOne({
-      username: "spencer", // You'll need to hash this properly
+      username: "spencer",
     });
-    console.log("Created demo user");
+    console.log("Found demo user");
 
     // Create companies
     const companies = await Company.insertMany([

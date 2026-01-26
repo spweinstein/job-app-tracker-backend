@@ -4,13 +4,13 @@
     <% if (locals.resume && resume.certifications && resume.certifications.length > 0) { %>
       <% resume.certifications.forEach((cert, index) => { %>
         <div class="repeatable-block" data-index="<%= index %>">
-          <%- include('../components/forms/selectInput.ejs', {
+          <%- include('../partials/forms/selectInput.ejs', {
             fieldName: `certifications[${index}][company]`,
             fieldLabel: "Company (Optional)",
             fieldValue: cert.company ? String(cert.company._id || cert.company) : "",
             fieldOptions: [{value: "", label: "None"}, ...companies.map(c => ({value: String(c._id), label: c.name}))]
           })%>
-          <%- include('../components/forms/textInput.ejs', {
+          <%- include('../partials/forms/textInput.ejs', {
             fieldName: `certifications[${index}][title]`,
             fieldLabel: "Certification Title",
             fieldValue: cert.title,
@@ -34,7 +34,7 @@
   
   <template class="repeatable-template">
     <div class="repeatable-block" data-index="__INDEX__">
-      <%- include('../components/forms/selectInput.ejs', {
+      <%- include('../partials/forms/selectInput.ejs', {
         fieldName: "certifications[__INDEX__][company]",
         fieldLabel: "Company (Optional)",
         fieldValue: "",
