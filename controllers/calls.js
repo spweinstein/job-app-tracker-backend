@@ -1,31 +1,30 @@
-const Activity = require("../models/activity.js");
+const Call = require("../models/call.js");
 const Company = require("../models/company.js");
 const JobApp = require("../models/jobApp.js");
 
-// GET "/activities/"
+// GET "/calls/"
 const renderIndex = async (req, res) => {
   const { page, limit, skip } = res.locals.pagination;
   const { sortBy, sortOrder } = res.locals.sort;
   const filter = {
     user: req.session.user._id,
-    ...(req.activityFilter || {}),
   };
-  const [activities, totalCount] = await Promise.all([
-    Activity.find(filter)
+  const [calls, totalCount] = await Promise.all([
+    Call.find(filter)
       .populate("company")
       .populate("jobApp")
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(limit),
-    Activity.countDocuments(filter),
+    Call.countDocuments(filter),
   ]);
 
   const totalPages = Math.ceil(totalCount / limit);
-  console.log(activities);
+  console.log(calls);
 
-  res.render("./activities/index.ejs", {
-    pageTitle: res.locals.activityContext?.pluralName || "Activities",
-    activities,
+  res.render("./calls/index.ejs", {
+    pageTitle: "Calls",
+    calls: calls,
     pagination: {
       ...res.locals.pagination,
       totalPages,
@@ -34,38 +33,38 @@ const renderIndex = async (req, res) => {
   });
 };
 
-// GET "/activities/new"
-const renderNewActivityForm = async (req, res) => {
+// GET "/calls/new"
+const renderNewCallForm = async (req, res) => {
   const companies = await Company.find({
     user: req.session.user._id,
   });
   const jobApps = await JobApp.find({
     user: req.session.user._id,
   });
-  res.render("./activities/new.ejs", {
-    pageTitle: "New Activity",
+  res.render("./calls/new.ejs", {
+    pageTitle: "New Call",
     companies,
     jobApps,
   });
 };
 
-// GET "/activities/:id"
-const renderShowActivityPage = async (req, res) => {
-  const activity = await Activity.findOne({
+// GET "/calls/:id"
+const renderShowCallPage = async (req, res) => {
+  const call = await Call.findOne({
     _id: req.params.id,
     user: req.session.user._id,
   })
     .populate("company")
     .populate("jobApp");
-  res.render("./activities/show.ejs", {
-    pageTitle: `View Activity`,
-    activity,
+  res.render("./calls/show.ejs", {
+    pageTitle: `View Call`,
+    activity: call,
   });
 };
 
-// GET "/activities/:id/edit"
-const renderEditActivityForm = async (req, res) => {
-  const activity = await Activity.findOne({
+// GET "/calls/:id/edit"
+const renderEditCallForm = async (req, res) => {
+  const call = await Call.findOne({
     _id: req.params.id,
     user: req.session.user._id,
   })
@@ -78,16 +77,16 @@ const renderEditActivityForm = async (req, res) => {
     user: req.session.user._id,
   });
 
-  res.render("./activities/edit.ejs", {
-    pageTitle: "Edit Activity",
-    activity,
+  res.render("./calls/edit.ejs", {
+    pageTitle: "Edit Call",
+    activity: call,
     companies,
     jobApps,
   });
 };
 
-// POST "/activities/"
-const createActivity = async (req, res) => {
+// POST "/calls/"
+const createCall = async (req, res) => {
   req.body.user = req.session.user._id;
 
   // Handle startAt date
@@ -108,21 +107,21 @@ const createActivity = async (req, res) => {
     req.body.endAt = date;
   }
 
-  await Activity.create(req.body);
-  res.redirect("/activities");
+  await Call.create(req.body);
+  res.redirect("/calls");
 };
 
-// DELETE "/activities/:id"
-const deleteActivity = async (req, res) => {
-  const activity = await Activity.findOneAndDelete({
+// DELETE "/calls/:id"
+const deleteCall = async (req, res) => {
+  const call = await Call.findOneAndDelete({
     _id: req.params.id,
     user: req.session.user._id,
   });
-  res.redirect("/activities");
+  res.redirect("/calls");
 };
 
-// PUT "/activities/:id"
-const updateActivity = async (req, res) => {
+// PUT "/calls/:id"
+const updateCall = async (req, res) => {
   // Handle startAt date
   if (req.body.startAt === "") {
     delete req.body.startAt;
@@ -141,22 +140,22 @@ const updateActivity = async (req, res) => {
     req.body.endAt = date;
   }
 
-  const activity = await Activity.findOneAndUpdate(
+  const call = await Call.findOneAndUpdate(
     {
       _id: req.params.id,
       user: req.session.user._id,
     },
     req.body,
   );
-  res.redirect(`/activities/${req.params.id}`);
+  res.redirect(`/calls/${req.params.id}`);
 };
 
 module.exports = {
   renderIndex,
-  renderNewActivityForm,
-  renderShowActivityPage,
-  renderEditActivityForm,
-  createActivity,
-  deleteActivity,
-  updateActivity,
+  renderNewCallForm,
+  renderShowCallPage,
+  renderEditCallForm,
+  createCall,
+  deleteCall,
+  updateCall,
 };

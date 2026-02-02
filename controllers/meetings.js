@@ -1,31 +1,30 @@
-const Activity = require("../models/activity.js");
+const Meeting = require("../models/meeting.js");
 const Company = require("../models/company.js");
 const JobApp = require("../models/jobApp.js");
 
-// GET "/activities/"
+// GET "/meetings/"
 const renderIndex = async (req, res) => {
   const { page, limit, skip } = res.locals.pagination;
   const { sortBy, sortOrder } = res.locals.sort;
   const filter = {
     user: req.session.user._id,
-    ...(req.activityFilter || {}),
   };
-  const [activities, totalCount] = await Promise.all([
-    Activity.find(filter)
+  const [meetings, totalCount] = await Promise.all([
+    Meeting.find(filter)
       .populate("company")
       .populate("jobApp")
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(limit),
-    Activity.countDocuments(filter),
+    Meeting.countDocuments(filter),
   ]);
 
   const totalPages = Math.ceil(totalCount / limit);
-  console.log(activities);
+  console.log(meetings);
 
-  res.render("./activities/index.ejs", {
-    pageTitle: res.locals.activityContext?.pluralName || "Activities",
-    activities,
+  res.render("./meetings/index.ejs", {
+    pageTitle: "Meetings",
+    meetings: meetings,
     pagination: {
       ...res.locals.pagination,
       totalPages,
@@ -34,38 +33,38 @@ const renderIndex = async (req, res) => {
   });
 };
 
-// GET "/activities/new"
-const renderNewActivityForm = async (req, res) => {
+// GET "/meetings/new"
+const renderNewMeetingForm = async (req, res) => {
   const companies = await Company.find({
     user: req.session.user._id,
   });
   const jobApps = await JobApp.find({
     user: req.session.user._id,
   });
-  res.render("./activities/new.ejs", {
-    pageTitle: "New Activity",
+  res.render("./meetings/new.ejs", {
+    pageTitle: "New Meeting",
     companies,
     jobApps,
   });
 };
 
-// GET "/activities/:id"
-const renderShowActivityPage = async (req, res) => {
-  const activity = await Activity.findOne({
+// GET "/meetings/:id"
+const renderShowMeetingPage = async (req, res) => {
+  const meeting = await Meeting.findOne({
     _id: req.params.id,
     user: req.session.user._id,
   })
     .populate("company")
     .populate("jobApp");
-  res.render("./activities/show.ejs", {
-    pageTitle: `View Activity`,
-    activity,
+  res.render("./meetings/show.ejs", {
+    pageTitle: `View Meeting`,
+    activity: meeting,
   });
 };
 
-// GET "/activities/:id/edit"
-const renderEditActivityForm = async (req, res) => {
-  const activity = await Activity.findOne({
+// GET "/meetings/:id/edit"
+const renderEditMeetingForm = async (req, res) => {
+  const meeting = await Meeting.findOne({
     _id: req.params.id,
     user: req.session.user._id,
   })
@@ -78,16 +77,16 @@ const renderEditActivityForm = async (req, res) => {
     user: req.session.user._id,
   });
 
-  res.render("./activities/edit.ejs", {
-    pageTitle: "Edit Activity",
-    activity,
+  res.render("./meetings/edit.ejs", {
+    pageTitle: "Edit Meeting",
+    activity: meeting,
     companies,
     jobApps,
   });
 };
 
-// POST "/activities/"
-const createActivity = async (req, res) => {
+// POST "/meetings/"
+const createMeeting = async (req, res) => {
   req.body.user = req.session.user._id;
 
   // Handle startAt date
@@ -108,21 +107,21 @@ const createActivity = async (req, res) => {
     req.body.endAt = date;
   }
 
-  await Activity.create(req.body);
-  res.redirect("/activities");
+  await Meeting.create(req.body);
+  res.redirect("/meetings");
 };
 
-// DELETE "/activities/:id"
-const deleteActivity = async (req, res) => {
-  const activity = await Activity.findOneAndDelete({
+// DELETE "/meetings/:id"
+const deleteMeeting = async (req, res) => {
+  const meeting = await Meeting.findOneAndDelete({
     _id: req.params.id,
     user: req.session.user._id,
   });
-  res.redirect("/activities");
+  res.redirect("/meetings");
 };
 
-// PUT "/activities/:id"
-const updateActivity = async (req, res) => {
+// PUT "/meetings/:id"
+const updateMeeting = async (req, res) => {
   // Handle startAt date
   if (req.body.startAt === "") {
     delete req.body.startAt;
@@ -141,22 +140,22 @@ const updateActivity = async (req, res) => {
     req.body.endAt = date;
   }
 
-  const activity = await Activity.findOneAndUpdate(
+  const meeting = await Meeting.findOneAndUpdate(
     {
       _id: req.params.id,
       user: req.session.user._id,
     },
     req.body,
   );
-  res.redirect(`/activities/${req.params.id}`);
+  res.redirect(`/meetings/${req.params.id}`);
 };
 
 module.exports = {
   renderIndex,
-  renderNewActivityForm,
-  renderShowActivityPage,
-  renderEditActivityForm,
-  createActivity,
-  deleteActivity,
-  updateActivity,
+  renderNewMeetingForm,
+  renderShowMeetingPage,
+  renderEditMeetingForm,
+  createMeeting,
+  deleteMeeting,
+  updateMeeting,
 };

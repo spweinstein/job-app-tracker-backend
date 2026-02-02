@@ -4,7 +4,11 @@ const jobAppRoutes = require("./jobApps.js");
 const companyRoutes = require("./companies.js");
 const resumeRoutes = require("./resumes.js");
 const coverLetterRoutes = require("./coverLetters.js");
-const activityRoutes = require("./activities.js");
+const interviewRoutes = require("./interviews.js");
+const taskRoutes = require("./tasks.js");
+const callRoutes = require("./calls.js");
+const emailRoutes = require("./emails.js");
+const meetingRoutes = require("./meetings.js");
 
 const authMiddlewares = require("../middleware/authMiddlewares.js");
 
@@ -26,6 +30,10 @@ router.use(
 router.use("/companies", authMiddlewares.isSignedIn, companyRoutes);
 router.use("/resumes", authMiddlewares.isSignedIn, resumeRoutes);
 router.use("/coverLetters", authMiddlewares.isSignedIn, coverLetterRoutes);
-router.use("/activities", authMiddlewares.isSignedIn, activityRoutes);
 
+router.use("/interviews", authMiddlewares.isSignedIn, interviewRoutes);
+router.use("/tasks", authMiddlewares.isSignedIn, taskRoutes);
+router.use("/calls", authMiddlewares.isSignedIn, callRoutes);
+router.use("/emails", authMiddlewares.isSignedIn, emailRoutes);
+router.use("/meetings", authMiddlewares.isSignedIn, meetingRoutes);
 module.exports = router;

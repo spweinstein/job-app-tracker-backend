@@ -1,31 +1,30 @@
-const Activity = require("../models/activity.js");
+const Interview = require("../models/interview.js");
 const Company = require("../models/company.js");
 const JobApp = require("../models/jobApp.js");
 
-// GET "/activities/"
+// GET "/interviews/"
 const renderIndex = async (req, res) => {
   const { page, limit, skip } = res.locals.pagination;
   const { sortBy, sortOrder } = res.locals.sort;
   const filter = {
     user: req.session.user._id,
-    ...(req.activityFilter || {}),
   };
-  const [activities, totalCount] = await Promise.all([
-    Activity.find(filter)
+  const [interviews, totalCount] = await Promise.all([
+    Interview.find(filter)
       .populate("company")
       .populate("jobApp")
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(limit),
-    Activity.countDocuments(filter),
+    Interview.countDocuments(filter),
   ]);
 
   const totalPages = Math.ceil(totalCount / limit);
-  console.log(activities);
+  console.log(interviews);
 
-  res.render("./activities/index.ejs", {
-    pageTitle: res.locals.activityContext?.pluralName || "Activities",
-    activities,
+  res.render("./interviews/index.ejs", {
+    pageTitle: "Interviews",
+    interviews,
     pagination: {
       ...res.locals.pagination,
       totalPages,
@@ -35,37 +34,37 @@ const renderIndex = async (req, res) => {
 };
 
 // GET "/activities/new"
-const renderNewActivityForm = async (req, res) => {
+const renderNewInterviewForm = async (req, res) => {
   const companies = await Company.find({
     user: req.session.user._id,
   });
   const jobApps = await JobApp.find({
     user: req.session.user._id,
   });
-  res.render("./activities/new.ejs", {
-    pageTitle: "New Activity",
+  res.render("./interviews/new.ejs", {
+    pageTitle: "New Interview",
     companies,
     jobApps,
   });
 };
 
 // GET "/activities/:id"
-const renderShowActivityPage = async (req, res) => {
-  const activity = await Activity.findOne({
+const renderShowInterviewPage = async (req, res) => {
+  const interview = await Interview.findOne({
     _id: req.params.id,
     user: req.session.user._id,
   })
     .populate("company")
     .populate("jobApp");
-  res.render("./activities/show.ejs", {
-    pageTitle: `View Activity`,
-    activity,
+  res.render("./interviews/show.ejs", {
+    pageTitle: `View Interview`,
+    interview: interview,
   });
 };
 
 // GET "/activities/:id/edit"
-const renderEditActivityForm = async (req, res) => {
-  const activity = await Activity.findOne({
+const renderEditInterviewForm = async (req, res) => {
+  const interview = await Interview.findOne({
     _id: req.params.id,
     user: req.session.user._id,
   })
@@ -78,16 +77,16 @@ const renderEditActivityForm = async (req, res) => {
     user: req.session.user._id,
   });
 
-  res.render("./activities/edit.ejs", {
-    pageTitle: "Edit Activity",
-    activity,
+  res.render("./interviews/edit.ejs", {
+    pageTitle: "Edit Interview",
+    interview: interview,
     companies,
     jobApps,
   });
 };
 
 // POST "/activities/"
-const createActivity = async (req, res) => {
+const createInterview = async (req, res) => {
   req.body.user = req.session.user._id;
 
   // Handle startAt date
@@ -108,21 +107,21 @@ const createActivity = async (req, res) => {
     req.body.endAt = date;
   }
 
-  await Activity.create(req.body);
-  res.redirect("/activities");
+  await Interview.create(req.body);
+  res.redirect("/interviews");
 };
 
 // DELETE "/activities/:id"
-const deleteActivity = async (req, res) => {
-  const activity = await Activity.findOneAndDelete({
+const deleteInterview = async (req, res) => {
+  const interview = await Interview.findOneAndDelete({
     _id: req.params.id,
     user: req.session.user._id,
   });
-  res.redirect("/activities");
+  res.redirect("/interviews");
 };
 
 // PUT "/activities/:id"
-const updateActivity = async (req, res) => {
+const updateInterview = async (req, res) => {
   // Handle startAt date
   if (req.body.startAt === "") {
     delete req.body.startAt;
@@ -141,22 +140,22 @@ const updateActivity = async (req, res) => {
     req.body.endAt = date;
   }
 
-  const activity = await Activity.findOneAndUpdate(
+  const interview = await Interview.findOneAndUpdate(
     {
       _id: req.params.id,
       user: req.session.user._id,
     },
     req.body,
   );
-  res.redirect(`/activities/${req.params.id}`);
+  res.redirect(`/interviews/${req.params.id}`);
 };
 
 module.exports = {
   renderIndex,
-  renderNewActivityForm,
-  renderShowActivityPage,
-  renderEditActivityForm,
-  createActivity,
-  deleteActivity,
-  updateActivity,
+  renderNewInterviewForm,
+  renderShowInterviewPage,
+  renderEditInterviewForm,
+  createInterview,
+  deleteInterview,
+  updateInterview,
 };

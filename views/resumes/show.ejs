@@ -7,7 +7,9 @@
     
     <main class="page-container">
       <%- include('../partials/pageHeader.ejs'); %>
-      
+      <a href="/resumes/<%= resume._id %>/export" class="btn btn-primary">
+        📄 Download PDF
+      </a>
       <div class="card">
         <div class="resume-container">
           <!-- Resume Header -->

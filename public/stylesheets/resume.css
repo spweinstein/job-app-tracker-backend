@@ -15,8 +15,8 @@
 .resume-header {
   text-align: center;
   border-bottom: 2px solid #2c3e50;
-  padding-bottom: 1.5rem;
-  margin-bottom: 2rem;
+  padding-bottom: 0rem;
+  margin-bottom: 1.5rem;
 }
 
 .resume-name {
@@ -226,12 +226,49 @@
   border-top: 2px solid #ecf0f1;
 }
 
-/* Print Styles */
+/* Print Styles - PDF Export Optimized */
 @media print {
+  /* Force everything to start at top of page */
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide navigation, buttons, and page chrome */
+  nav.navbar,
+  .btn,
+  .actions,
+  .resume-actions,
+  .resume-notes,
+  .page-header,
+  header,
+  #error-message {
+    display: none !important;
+  }
+
+  /* Remove ALL spacing from containers */
+  main,
+  .page-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+  }
+
+  /* Resume container controls all spacing and typography */
   .resume-container {
-    max-width: 100%;
-    padding: 0.5in;
-    box-shadow: none;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0.5in !important;
+    box-shadow: none !important;
     font-size: 11pt;
   }
 
@@ -243,48 +280,30 @@
     font-size: 14pt;
   }
 
-  .resume-notes,
-  .resume-actions,
-  .navbar,
-  .btn {
-    display: none !important;
-  }
-
+  /* Prevent page breaks in sections */
+  .resume-section,
   .resume-item,
   .education-item,
   .certification-item {
     page-break-inside: avoid;
   }
 
+  /* Skill tags - remove background for print */
   .skill-tag {
     border: 1px solid #ccc;
     background: white;
   }
-}
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .resume-container {
-    padding: 2rem 1.5rem;
+  /* Print links as text with URL */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.9em;
+    color: #666;
   }
 
-  .resume-name {
-    font-size: 2rem;
-  }
-
-  .resume-item-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
-  }
-
-  .education-header {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .resume-item-date,
-  .education-year {
-    white-space: normal;
+  /* Don't print link URLs for internal navigation */
+  a[href^="/"]:after,
+  a[href^="#"]:after {
+    content: "";
   }
 }

@@ -1,31 +1,30 @@
-const Activity = require("../models/activity.js");
+const Email = require("../models/email.js");
 const Company = require("../models/company.js");
 const JobApp = require("../models/jobApp.js");
 
-// GET "/activities/"
+// GET "/emails/"
 const renderIndex = async (req, res) => {
   const { page, limit, skip } = res.locals.pagination;
   const { sortBy, sortOrder } = res.locals.sort;
   const filter = {
     user: req.session.user._id,
-    ...(req.activityFilter || {}),
   };
-  const [activities, totalCount] = await Promise.all([
-    Activity.find(filter)
+  const [emails, totalCount] = await Promise.all([
+    Email.find(filter)
       .populate("company")
       .populate("jobApp")
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(limit),
-    Activity.countDocuments(filter),
+    Email.countDocuments(filter),
   ]);
 
   const totalPages = Math.ceil(totalCount / limit);
-  console.log(activities);
+  console.log(emails);
 
-  res.render("./activities/index.ejs", {
-    pageTitle: res.locals.activityContext?.pluralName || "Activities",
-    activities,
+  res.render("./emails/index.ejs", {
+    pageTitle: "Emails",
+    emails: emails,
     pagination: {
       ...res.locals.pagination,
       totalPages,
@@ -34,38 +33,38 @@ const renderIndex = async (req, res) => {
   });
 };
 
-// GET "/activities/new"
-const renderNewActivityForm = async (req, res) => {
+// GET "/emails/new"
+const renderNewEmailForm = async (req, res) => {
   const companies = await Company.find({
     user: req.session.user._id,
   });
   const jobApps = await JobApp.find({
     user: req.session.user._id,
   });
-  res.render("./activities/new.ejs", {
-    pageTitle: "New Activity",
+  res.render("./emails/new.ejs", {
+    pageTitle: "New Email",
     companies,
     jobApps,
   });
 };
 
-// GET "/activities/:id"
-const renderShowActivityPage = async (req, res) => {
-  const activity = await Activity.findOne({
+// GET "/emails/:id"
+const renderShowEmailPage = async (req, res) => {
+  const email = await Email.findOne({
     _id: req.params.id,
     user: req.session.user._id,
   })
     .populate("company")
     .populate("jobApp");
-  res.render("./activities/show.ejs", {
-    pageTitle: `View Activity`,
-    activity,
+  res.render("./emails/show.ejs", {
+    pageTitle: `View Email`,
+    activity: email,
   });
 };
 
-// GET "/activities/:id/edit"
-const renderEditActivityForm = async (req, res) => {
-  const activity = await Activity.findOne({
+// GET "/emails/:id/edit"
+const renderEditEmailForm = async (req, res) => {
+  const email = await Email.findOne({
     _id: req.params.id,
     user: req.session.user._id,
   })
@@ -78,16 +77,16 @@ const renderEditActivityForm = async (req, res) => {
     user: req.session.user._id,
   });
 
-  res.render("./activities/edit.ejs", {
-    pageTitle: "Edit Activity",
-    activity,
+  res.render("./emails/edit.ejs", {
+    pageTitle: "Edit Email",
+    activity: email,
     companies,
     jobApps,
   });
 };
 
-// POST "/activities/"
-const createActivity = async (req, res) => {
+// POST "/emails/"
+const createEmail = async (req, res) => {
   req.body.user = req.session.user._id;
 
   // Handle startAt date
@@ -108,21 +107,21 @@ const createActivity = async (req, res) => {
     req.body.endAt = date;
   }
 
-  await Activity.create(req.body);
-  res.redirect("/activities");
+  await Email.create(req.body);
+  res.redirect("/emails");
 };
 
-// DELETE "/activities/:id"
-const deleteActivity = async (req, res) => {
-  const activity = await Activity.findOneAndDelete({
+// DELETE "/emails/:id"
+const deleteEmail = async (req, res) => {
+  const email = await Email.findOneAndDelete({
     _id: req.params.id,
     user: req.session.user._id,
   });
-  res.redirect("/activities");
+  res.redirect("/emails");
 };
 
-// PUT "/activities/:id"
-const updateActivity = async (req, res) => {
+// PUT "/emails/:id"
+const updateEmail = async (req, res) => {
   // Handle startAt date
   if (req.body.startAt === "") {
     delete req.body.startAt;
@@ -141,22 +140,22 @@ const updateActivity = async (req, res) => {
     req.body.endAt = date;
   }
 
-  const activity = await Activity.findOneAndUpdate(
+  const email = await Email.findOneAndUpdate(
     {
       _id: req.params.id,
       user: req.session.user._id,
     },
     req.body,
   );
-  res.redirect(`/activities/${req.params.id}`);
+  res.redirect(`/emails/${req.params.id}`);
 };
 
 module.exports = {
   renderIndex,
-  renderNewActivityForm,
-  renderShowActivityPage,
-  renderEditActivityForm,
-  createActivity,
-  deleteActivity,
-  updateActivity,
+  renderNewEmailForm,
+  renderShowEmailPage,
+  renderEditEmailForm,
+  createEmail,
+  deleteEmail,
+  updateEmail,
 };

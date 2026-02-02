@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs'); %>
+
+  <body>
+    <%- include('../partials/nav.ejs');%>
+    
+    <main class="page-container">
+      <%- include('../partials/pageHeader.ejs'); %>
+      <div class="card">
+        <div class="card-header">
+          <div><strong>Title:</strong> <%= email.title %></div>
+          <div><strong>Company:</strong> <%= email.company.name %></div>
+        </div>
+        <div><strong>Type:</strong> <%= email.type %></div>
+        <div><strong>State:</strong> <span class="state state-<%= email.state.toLowerCase() %>"><%= email.state %></span></div>
+        <% if(email.jobApp){ %>
+        <div><strong>Job Application:</strong> <a href="/jobApps/<%= email.jobApp._id %>"><%= email.jobApp.title %></a></div>
+        <% } %>
+        <div>
+          <strong>Start Date:</strong> <%= new Date(email.startAt).toLocaleDateString() %>
+        </div>
+        <% if(email.endAt){ %>
+        <div>
+          <strong>End Date:</strong> <%= new Date(email.endAt).toLocaleDateString() %>
+        </div>
+        <% } %>
+        <% if(email.description){ %>
+        <div>
+          <strong>Description:</strong> <%= email.description %>
+        </div>
+        <% } %>
+        <% if(email.notes){ %>
+        <div>
+          <strong>Notes:</strong> <%= email.notes %>
+        </div>
+        <% } %>
+        <div class="actions">
+          <a href="/emails/<%=email._id%>/edit" class="btn btn-primary btn-sm">Edit</a>
+          <form action="/emails/<%=email._id%>?_method=DELETE" method="POST">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

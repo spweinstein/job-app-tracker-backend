@@ -5,60 +5,29 @@
     <%- include('../partials/nav.ejs'); %>
     <main class="page-container">
       <%- include('../partials/pageHeader.ejs'); %>
-      <form class="crud-form" action="/activities/<%=activity._id%>?_method=PUT" method="POST">
+      <form class="crud-form" action="/meetings/<%=meeting._id%>?_method=PUT" method="POST">
         <%- include('../partials/forms/selectInput.ejs', {
           fieldName: "company",
           fieldLabel: "Company",
-          fieldValue: String(activity.company?._id),
+          fieldValue: String(meeting.company?._id),
           fieldOptions: companies.map(company=>{return {value: String(company._id), label: company.name}})
         })%>
         <%- include('../partials/forms/selectInput.ejs', {
           fieldName: "jobApp",
           fieldLabel: "Job Application",
-          fieldValue: String(activity.jobApp?._id),
+          fieldValue: String(meeting.jobApp?._id),
           fieldOptions: jobApps.map(jobApp=>{return {value: String(jobApp._id), label: jobApp.title}})
         })%>
         <%- include('../partials/forms/textInput.ejs', {
           fieldName: "title",
           fieldLabel: "Title",
-          fieldValue: activity.title
+          fieldValue: meeting.title
         }) %>
-        <%- include('../partials/forms/selectInput.ejs', {
-          fieldName: "type",
-          fieldLabel: "Activity Type",
-          fieldValue: activity.type,
-          fieldOptions: [
-            {
-              value: "Task",
-              label: "Task"
-            },
-            {
-              value: "Interview",
-              label: "Interview"
-            },
-            {
-              value: "Meeting",
-              label: "Meeting"
-            },
-            {
-              value: "Event",
-              label: "Event"
-            },
-            {
-              value: "Email",
-              label: "Email"
-            },
-            {
-              value: "Call",
-              label: "Call"
-            }
-          ]
-        })%>
 
         <%- include('../partials/forms/selectInput.ejs', {
           fieldName: "state",
           fieldLabel: "State",
-          fieldValue: activity.state,
+          fieldValue: meeting.state,
           fieldOptions: [
             {
               value: "Planned",
@@ -78,25 +47,25 @@
         <%- include('../partials/forms/dateInput.ejs', {
           fieldName: "startAt",
           fieldLabel: "Start Date",
-          fieldValue: activity.startAt ? activity.startAt.toISOString().slice(0,10) : new Date().toISOString().slice(0,10)
+          fieldValue: meeting.startAt ? meeting.startAt.toISOString().slice(0,10) : new Date().toISOString().slice(0,10)
         }) %>
 
         <%- include('../partials/forms/dateInput.ejs', {
           fieldName: "endAt",
           fieldLabel: "End Date",
-          fieldValue: activity.endAt ? activity.endAt.toISOString().slice(0,10) : ""
+          fieldValue: meeting.endAt ? meeting.endAt.toISOString().slice(0,10) : ""
         }) %>
 
         <%- include('../partials/forms/textInput.ejs', {
           fieldName: "description",
           fieldLabel: "Description",
-          fieldValue: activity.description || ""
+          fieldValue: meeting.description || ""
         }) %>
 
         <%- include('../partials/forms/textInput.ejs', {
           fieldName: "notes",
           fieldLabel: "Notes",
-          fieldValue: activity.notes || ""
+          fieldValue: meeting.notes || ""
         }) %>
 
         <%- include('../partials/forms/textInput.ejs', {
@@ -116,9 +85,8 @@
           ]
         })%>
 
-
         <div class="actions">
-          <button type="submit">Save Activity</button>
+          <button type="submit">Save Meeting</button>
         </div>
       </form>
     </main>

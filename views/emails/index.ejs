@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs'); %>
+
+  <body>
+    <%- include('../partials/nav.ejs')%>
+    
+    <main class="page-container">
+      <%- include('../partials/pageHeader.ejs'); %>
+      <a class="btn btn-primary btn-lg" href="/emails/new">+ ADD EMAIL</a>
+
+      <% if(emails.length>0){ %>
+        <%- include('../partials/tables/table.ejs', {
+          columnNames: ["Title", "State", "Company", "Start Date"],
+          columnPaths: ["title", "state", "company.name", "startAt"],
+          resourceName: "emails",
+          rows: emails
+        })%>
+
+      <% } else { %>
+        <p>No emails yet!</p>
+      <% } %>
+    </main>
+  </body>
+</html>

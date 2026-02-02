@@ -12,5 +12,6 @@ router.get("/:id/edit", controllers.renderEditResumeForm);
 router.put("/:id", controllers.updateResume);
 router.get("/:id", controllers.showResume);
 router.delete("/:id", controllers.deleteResume);
+router.get("/:id/export", controllers.exportResumePDF);
 
 module.exports = router;

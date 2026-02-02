@@ -2,6 +2,62 @@ const Resume = require("../models/resume.js");
 const Company = require("../models/company.js");
 const JobApp = require("../models/jobApp.js");
 
+// controllers/resumes.js
+const puppeteer = require("puppeteer");
+
+const exportResumePDF = async (req, res) => {
+  const resume = await Resume.findOne({
+    _id: req.params.id,
+    user: req.session.user._id,
+  })
+    .populate("experience.company")
+    .populate("projects.company")
+    .populate("certifications.company");
+
+  const html = await new Promise((resolve, reject) => {
+    res.render(
+      "resumes/show.ejs",
+      { pageTitle: "Resume", resume },
+      (err, html) => {
+        if (err) reject(err);
+        else resolve(html);
+      },
+    );
+  });
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+  const page = await browser.newPage();
+
+  // Set base URL so relative CSS/image paths work
+  await page.setContent(html, {
+    waitUntil: ["networkidle0", "load"],
+    timeout: 30000,
+  });
+
+  // Optional: inject inline styles if external CSS still doesn't load
+  await page.addStyleTag({
+    path: "./public/stylesheets/resume.css", // adjust path as needed
+  });
+
+  const pdf = await page.pdf({
+    format: "A4",
+    printBackground: true,
+    margin: { top: "0in", right: "0.5in", bottom: "0.5in", left: "0.5in" },
+  });
+
+  await browser.close();
+
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="${resume.name}-resume.pdf"`,
+  );
+  res.send(pdf);
+};
+
 const renderIndex = async (req, res) => {
   const { page, limit, skip } = res.locals.pagination;
   const { sortBy, sortOrder } = res.locals.sort;
@@ -135,4 +191,5 @@ module.exports = {
   updateResume,
   showResume,
   deleteResume,
+  exportResumePDF,
 };

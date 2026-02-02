@@ -25,10 +25,6 @@ const activitySchema = new mongoose.Schema({
     required: true,
   },
   endAt: Date,
-  type: {
-    type: String,
-    enum: ["Task", "Interview", "Meeting", "Event", "Email", "Call"],
-  },
   state: {
     type: String,
     enum: ["Planned", "Done", "Canceled"],
@@ -41,4 +37,27 @@ const activitySchema = new mongoose.Schema({
   notes: String,
 });
 
-module.exports = mongoose.model("Activity", activitySchema);
+const Activity = mongoose.model("Activity", activitySchema);
+
+// Discriminator models - add type-specific fields
+
+// const Email = Activity.discriminator(
+//   "Email",
+//   new Schema({
+//     subject: String,
+//     recipient: String,
+//     ccRecipients: [String],
+//     attachments: [String],
+//   }),
+// );
+
+// const Call = Activity.discriminator(
+//   "Call",
+//   new Schema({
+//     phoneNumber: String,
+//     duration: Number, // minutes
+//     outcome: String,
+//   }),
+// );
+
+module.exports = Activity;

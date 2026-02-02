@@ -7,7 +7,7 @@
     
     <main class="page-container">
       <%- include('../partials/pageHeader.ejs'); %>
-      <a class="btn btn-primary btn-lg" href="/activities/new">+ ADD ACTIVITY</a>
+      <a class="btn btn-primary btn-lg" href="<%= locals.activityContext?.basePath || '/activities'%>/new">+ ADD <%=(locals.activityContext?.displayName||"ACTIVITY").toUpperCase()%></a>
 
       <% if(activities.length>0){ %>
         <%- include('../partials/tables/table.ejs', {
