@@ -12,31 +12,50 @@
                 <%- include('../partials/forms/textInput.ejs', {
                     fieldName: "name",
                     fieldLabel: "Name",
-                    fieldValue: "",
+                    fieldValue: formData.name,
                     required: true
                 })%>
 
                 <%- include('../partials/forms/textInput.ejs', {
                     fieldName: "link",
                     fieldLabel: "Link",
-                    fieldValue: ""
+                    fieldValue: formData.link
                 })%>
 
                 <%- include('../partials/forms/textInput.ejs', {
                     fieldName: "notes",
                     fieldLabel: "Notes",
-                    fieldValue: ""
+                    fieldValue: formData.notes
                 })%>
 
                 <div class="field">
                     <label for="summary">Objective Statement</label>
-                    <textarea name="summary" id="summary"></textarea>
+                    <textarea name="summary" id="summary"><%= formData.summary %></textarea>
                 </div>
 
-                <%- include('./experiencePartial.ejs', {companies}); %>
-                <%- include('./educationPartial.ejs'); %>
-                <%- include('./projectsPartial.ejs'); %>
-                <%- include('./certificationsPartial.ejs'); %>
+                <!-- Parent Resume Selection -->
+                <% if (duplicateFrom) { %>
+                    <div class="field">
+                        <label>Forked from:</label>
+                        <p style="margin: 0.5rem 0; font-weight: 500;"><%= duplicateFrom.name %></p>
+                        <input type="hidden" name="parent" value="<%= duplicateFrom._id %>">
+                    </div>
+                <% } else if (allResumes && allResumes.length > 0) { %>
+                    <div class="field">
+                        <label for="parent">Parent Resume (optional)</label>
+                        <select name="parent" id="parent">
+                            <option value="">None (standalone resume)</option>
+                            <% allResumes.forEach(resume => { %>
+                                <option value="<%= resume._id %>"><%= resume.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                <% } %>
+
+                <%- include('./experiencePartial.ejs', {companies, resume: formData}); %>
+                <%- include('./educationPartial.ejs', {resume: formData}); %>
+                <%- include('./projectsPartial.ejs', {resume: formData}); %>
+                <%- include('./certificationsPartial.ejs', {resume: formData}); %>
 
 
                 <div class="actions">

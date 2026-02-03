@@ -21,7 +21,14 @@ const jobAppSchema = new mongoose.Schema(
     title: String,
     status: {
       type: String,
-      enum: ["Applied", "Interviewing", "Offer", "Rejected"],
+      enum: [
+        "Applied",
+        "Interviewing",
+        "Accepted",
+        "Offer",
+        "Rejected",
+        "Withdrawn",
+      ],
       default: "Applied",
     },
     priority: {
@@ -31,7 +38,14 @@ const jobAppSchema = new mongoose.Schema(
     },
     source: {
       type: String,
-      enum: ["LinkedIn", "Indeed", "Company Site", "Networking"],
+      enum: [
+        "LinkedIn",
+        "Indeed",
+        "Company Site",
+        "Networking",
+        "Referral",
+        "Recruiter",
+      ],
       default: "Indeed",
     },
     appliedAt: {

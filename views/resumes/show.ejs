@@ -7,9 +7,26 @@
     
     <main class="page-container">
       <%- include('../partials/pageHeader.ejs'); %>
-      <a href="/resumes/<%= resume._id %>/export" class="btn btn-primary">
-        📄 Download PDF
-      </a>
+      
+      <% if (!isExporting) { %>
+        <!-- Parent Lineage -->
+        <% if (resume.parent) { %>
+          <div class="resume-lineage">
+            ↗ Forked from: <a href="/resumes/<%= resume.parent._id %>"><%= resume.parent.name %></a>
+          </div>
+        <% } %>
+        
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+          <a href="/resumes/<%= resume._id %>/export" class="btn btn-primary">
+            📄 Download PDF
+          </a>
+          <a href="/resumes/new?duplicateFrom=<%= resume._id %>" class="btn btn-primary">
+            🔄 Duplicate
+          </a>
+        </div>
+      <% } %>
+      
       <div class="card">
         <div class="resume-container">
           <!-- Resume Header -->
@@ -151,13 +168,37 @@
         </div>
         <% } %>
 
-        <!-- Actions -->
-        <div class="actions resume-actions">
-          <a href="/resumes/<%=resume._id%>/edit" class="btn btn-primary btn-sm">Edit</a>
-          <form action="/resumes/<%=resume._id%>?_method=DELETE" method="POST">
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-          </form>
-        </div>
+        <% if (!isExporting) { %>
+          <!-- Child Versions -->
+          <% if (totalChildCount > 0) { %>
+            <div class="resume-versions">
+              <h3>Versions based on this resume (<%= totalChildCount %>):</h3>
+              <ul>
+                <% children.forEach(child => { %>
+                  <li>
+                    <a href="/resumes/<%= child._id %>"><%= child.name %></a>
+                    <span class="version-date">modified <%= child.updatedAt.toLocaleDateString() %></span>
+                  </li>
+                <% }) %>
+              </ul>
+              <% if (totalChildCount > 5) { %>
+                <p>
+                  <a href="/resumes?parent=<%= resume._id %>" class="view-all-link">
+                    View all <%= totalChildCount %> versions →
+                  </a>
+                </p>
+              <% } %>
+            </div>
+          <% } %>
+
+          <!-- Actions -->
+          <div class="actions resume-actions">
+            <a href="/resumes/<%=resume._id%>/edit" class="btn btn-primary btn-sm">Edit</a>
+            <form action="/resumes/<%=resume._id%>?_method=DELETE" method="POST">
+              <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+          </div>
+        <% } %>
       </div>
     </main>
   </body>

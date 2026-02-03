@@ -17,7 +17,13 @@ const exportResumePDF = async (req, res) => {
   const html = await new Promise((resolve, reject) => {
     res.render(
       "resumes/show.ejs",
-      { pageTitle: "Resume", resume },
+      { 
+        pageTitle: "Resume", 
+        resume,
+        children: [],
+        totalChildCount: 0,
+        isExporting: true
+      },
       (err, html) => {
         if (err) reject(err);
         else resolve(html);
@@ -63,6 +69,11 @@ const renderIndex = async (req, res) => {
   const { sortBy, sortOrder } = res.locals.sort;
   const filter = { user: req.session.user._id };
 
+  // Add parent filter if provided in query string
+  if (req.query.parent) {
+    filter.parent = req.query.parent;
+  }
+
   const [resumes, totalCount] = await Promise.all([
     Resume.find(filter)
       .sort({ [sortBy]: sortOrder })
@@ -73,9 +84,21 @@ const renderIndex = async (req, res) => {
 
   const totalPages = Math.ceil(totalCount / limit);
 
+  // Get parent resume name if filtering by parent
+  let parentResume = null;
+  if (req.query.parent) {
+    parentResume = await Resume.findOne({
+      _id: req.query.parent,
+      user: req.session.user._id,
+    }).select("name");
+  }
+
   res.render("./resumes/index.ejs", {
-    pageTitle: "Resumes",
+    pageTitle: req.query.parent && parentResume
+      ? `Versions of ${parentResume.name}`
+      : "Resumes",
     resumes,
+    parentResume,
     pagination: {
       ...res.locals.pagination,
       totalPages,
@@ -88,9 +111,50 @@ const renderNewResumeForm = async (req, res) => {
   const companies = await Company.find({
     user: req.session.user._id,
   });
+
+  const duplicateFromId = req.query.duplicateFrom;
+  let duplicateFrom = null;
+  let allResumes = null;
+  let formData = {
+    name: "",
+    link: "",
+    notes: "",
+    summary: "",
+  };
+
+  if (duplicateFromId) {
+    // Coming from duplicate button - pre-populate with parent resume data
+    duplicateFrom = await Resume.findOne({
+      _id: duplicateFromId,
+      user: req.session.user._id,
+    });
+
+    if (duplicateFrom) {
+      formData = {
+        name: `${duplicateFrom.name} (Copy)`,
+        link: "", // Don't copy external link
+        notes: duplicateFrom.notes || "",
+        summary: duplicateFrom.summary || "",
+        experience: duplicateFrom.experience,
+        education: duplicateFrom.education,
+        projects: duplicateFrom.projects,
+        certifications: duplicateFrom.certifications,
+        skills: duplicateFrom.skills,
+      };
+    }
+  } else {
+    // Fetch all resumes for parent dropdown
+    allResumes = await Resume.find({ user: req.session.user._id })
+      .select("name")
+      .sort({ name: 1 });
+  }
+
   res.render("./resumes/new.ejs", {
     pageTitle: "Add Resume",
     companies,
+    duplicateFrom,
+    allResumes,
+    formData,
   });
 };
 
@@ -110,6 +174,38 @@ const renderEditResumeForm = async (req, res) => {
 
 const createResume = async (req, res) => {
   req.body.user = req.session.user._id;
+
+  // Remove root from req.body (it's derived, not user-set)
+  delete req.body.root;
+
+  // Clean up empty company references in projects
+  if (req.body.projects) {
+    req.body.projects.forEach((proj) => {
+      if (proj.company === "" || !proj.company) {
+        delete proj.company;
+      }
+    });
+  }
+
+  // Clean up empty company references in certifications
+  if (req.body.certifications) {
+    req.body.certifications.forEach((cert) => {
+      if (cert.company === "" || !cert.company) {
+        delete cert.company;
+      }
+    });
+  }
+
+  // Set root based on parent
+  if (req.body.parent && req.body.parent !== "") {
+    const parent = await Resume.findById(req.body.parent);
+    if (parent) {
+      req.body.root = parent.root || parent._id;
+    }
+  } else {
+    req.body.parent = null;
+    req.body.root = null;
+  }
 
   await Resume.create(req.body);
   res.redirect("/resumes");
@@ -158,20 +254,51 @@ const showResume = async (req, res) => {
   })
     .populate("experience.company")
     .populate("projects.company")
-    .populate("certifications.company");
+    .populate("certifications.company")
+    .populate("parent");
+
+  // Fetch direct children (limit 5 for display) and get accurate total count
+  const [children, totalChildCount] = await Promise.all([
+    Resume.find({
+      parent: req.params.id,
+      user: req.session.user._id,
+    })
+      .select("name updatedAt")
+      .sort({ updatedAt: -1 })
+      .limit(5),
+    Resume.countDocuments({
+      parent: req.params.id,
+      user: req.session.user._id,
+    }),
+  ]);
+
   res.render("resumes/show.ejs", {
     resume,
+    children,
+    totalChildCount,
     pageTitle: "Resume Details",
+    isExporting: false,
   });
 };
 
 const deleteResume = async (req, res) => {
-  const jobAppCount = await JobApp.countDocuments({ resume: req.params.id });
+  const [jobAppCount, childCount] = await Promise.all([
+    JobApp.countDocuments({ resume: req.params.id }),
+    Resume.countDocuments({ parent: req.params.id }),
+  ]);
 
   if (jobAppCount > 0) {
     req.flash(
       "error",
       `Cannot delete resume. It has ${jobAppCount} linked job application(s). Please delete those first.`,
+    );
+    return res.redirect("/resumes");
+  }
+
+  if (childCount > 0) {
+    req.flash(
+      "error",
+      `Cannot delete resume. It has ${childCount} forked version(s). Please delete those first.`,
     );
     return res.redirect("/resumes");
   }

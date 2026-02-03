@@ -1,6 +1,6 @@
 const paginationMiddleware = (
   defaultSort = "updatedAt",
-  defaultLimit = 2,
+  defaultLimit = 20,
   defaultSortOrder = "desc",
 ) => {
   return (req, res, next) => {
