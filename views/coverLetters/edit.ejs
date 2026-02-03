@@ -5,7 +5,7 @@
     <%- include('../partials/nav.ejs'); %>
     <main class="page-container">
       <%- include('../partials/pageHeader.ejs'); %>
-      <form class="crud-form" action="/coverLetters/<%=coverLetters._id%>?_method=PUT" method="POST">
+      <form class="crud-form" action="/coverLetters/<%=coverLetter._id%>?_method=PUT" method="POST">
         <%- include('../partials/forms/textInput.ejs', {
           fieldName: "name",
           fieldLabel: "Name",
@@ -13,7 +13,7 @@
         }) %>
         <div class="field">
           <label for="body">Body</label>
-          <textarea name="body" id="body"><%= coverLetter?.body %></textarea>
+          <textarea name="body" id="body" class="cover-letter-body"><%= coverLetter?.body %></textarea>
         </div>
         <div class="actions">
           <button type="submit">Save Cover Letter</button>

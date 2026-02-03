@@ -20,6 +20,16 @@ form.crud-form {
   min-height: 32px;
 }
 
+.field textarea {
+  min-height: 120px;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.field textarea.cover-letter-body {
+  min-height: 240px;
+}
+
 /* Checkbox-specific styling */
 .field input[type="checkbox"] {
   width: var(--input-height);

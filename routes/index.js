@@ -9,6 +9,7 @@ const taskRoutes = require("./tasks.js");
 const callRoutes = require("./calls.js");
 const emailRoutes = require("./emails.js");
 const meetingRoutes = require("./meetings.js");
+const resumeTailorSessionRoutes = require("./resumeTailorSessions.js");
 
 const authMiddlewares = require("../middleware/authMiddlewares.js");
 
@@ -36,4 +37,9 @@ router.use("/tasks", authMiddlewares.isSignedIn, taskRoutes);
 router.use("/calls", authMiddlewares.isSignedIn, callRoutes);
 router.use("/emails", authMiddlewares.isSignedIn, emailRoutes);
 router.use("/meetings", authMiddlewares.isSignedIn, meetingRoutes);
+router.use(
+  "/resumeTailorSessions",
+  authMiddlewares.isSignedIn,
+  resumeTailorSessionRoutes,
+);
 module.exports = router;
