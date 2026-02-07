@@ -15,6 +15,7 @@ export const getCompanies = async (req, res) => {
 export const getCompany = async (req, res) => {
   try {
     const company = await Company.find({ _id: req.params.id });
+    res.json(company);
   } catch (e) {
     if (res.statusCode === 404) {
       res.json({ error: e.message });
