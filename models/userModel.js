@@ -10,11 +10,11 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
-  role: {
-    type: String,
-    required: true,
-    enum: ["admin", "user"],
-  },
+  // role: {
+  //   type: String,
+  //   required: true,
+  //   enum: ["admin", "user"],
+  // },
 });
 
 userSchema.set("toJSON", {

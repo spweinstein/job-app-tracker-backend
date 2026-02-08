@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
+import User from "../models/userModel.js";
 
 const saltRounds = 12;
 
@@ -23,6 +23,7 @@ export const signUp = async (req, res) => {
 
     res.status(201).json({ token });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ err: err.message });
   }
 };
