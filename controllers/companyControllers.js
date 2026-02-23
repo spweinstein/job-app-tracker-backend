@@ -3,7 +3,9 @@ import Company from "../models/companyModel.js";
 // GET /companies/
 export const getCompanies = async (req, res) => {
   try {
-    const companies = await Company.find({ author: req.user._id });
+    // const companies = await Company.find({ author: req.user._id });
+    const companies = await Company.paginate(req, { author: req.user._id });
+    console.log(companies);
     res.json(companies);
   } catch (e) {
     console.log(`Error at getCompanies: ${e}`);
@@ -33,10 +35,18 @@ export const getCompany = async (req, res) => {
 export const createCompany = async (req, res) => {
   try {
     req.body.author = req.user._id;
+    // Ensure company name is unique for the user
+    const companyInDatabase = await Company.findOne({
+      author: req.user._id,
+      name: req.body.name,
+    });
+    if (companyInDatabase) {
+      return res.status(409).json({ err: `Company ${req.body.name} already in database!` });
+    }
     const createdCompany = await Company.create(req.body);
     res.status(201).json(createdCompany);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ err: e.message });
   }
 };
 
@@ -55,9 +65,9 @@ export const deleteCompany = async (req, res) => {
     res.json(deletedCompany);
   } catch (e) {
     if (res.statusCode === 404) {
-      res.json({ error: e.message });
+        res.json({ err: e.message });
     } else {
-      res.status(500).json({ error: e.message });
+      res.status(500).json({ err: e.message });
     }
   }
 };
