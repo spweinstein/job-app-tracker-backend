@@ -14,4 +14,6 @@ router.delete("/:id", controllers.deleteApp);
 
 router.put("/:id", controllers.updateApp);
 
+router.get("/stats/dashboard", controllers.getDashboardStats);
+
 export default router;

@@ -6,12 +6,12 @@ const documentSchema = new mongoose.Schema(
     // Tree structure & metadata
     parent: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Resume",
+      ref: "Document",
       // required: true,
     },
     root: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Resume",
+      ref: "Document",
       // required: true,
     },
     owner: {

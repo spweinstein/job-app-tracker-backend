@@ -7,6 +7,7 @@ const getCoverLetters = async (req, res) => {
     const result = await CoverLetter.paginate(req, { owner: req.user._id }, {
       populate: ["parent"],
     });
+    
     res.json(result);
   } catch (error) {
     console.error(error);
@@ -88,11 +89,11 @@ const deleteCoverLetter = async (req, res) => {
       coverLetter: req.params.id,
     });
 
-    if (jobAppCount > 0) {
-      return res.status(400).json({
-        error: `Cannot delete cover letter. It has ${jobAppCount} linked job application(s). Please delete those first.`,
-      });
-    }
+    // if (jobAppCount > 0) {
+    //   return res.status(400).json({
+    //     error: `Cannot delete cover letter. It has ${jobAppCount} linked job application(s). Please delete those first.`,
+    //   });
+    // }
 
     await CoverLetter.findOneAndDelete({
       _id: req.params.id,
@@ -108,28 +109,15 @@ const deleteCoverLetter = async (req, res) => {
 // PUT "/coverLetters/:id"
 const updateCoverLetter = async (req, res) => {
   try {
-    // Check if another coverLetter with this name exists (excluding current coverLetter)
-    const duplicateCoverLetter = await CoverLetter.findOne({
-      owner: req.user._id,
-      name: req.body.name,
-      _id: { $ne: req.params.id }, // Exclude the current coverLetter being updated
-    });
-
-    if (duplicateCoverLetter) {
-      return res
-        .status(409)
-        .json({ error: `CoverLetter ${req.body.name} already in database!` });
-    } else {
-      const coverLetter = await CoverLetter.findOneAndUpdate(
-        {
-          owner: req.user._id,
-          _id: req.params.id,
-        },
-        req.body,
-        { new: true },
-      );
-      res.json(coverLetter);
-    }
+    const coverLetter = await CoverLetter.findOneAndUpdate(
+      {
+        owner: req.user._id,
+        _id: req.params.id,
+      },
+      req.body,
+      { new: true },
+    );
+    res.json(coverLetter);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

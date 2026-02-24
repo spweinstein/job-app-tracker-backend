@@ -9,7 +9,7 @@ export const signUp = async (req, res) => {
     const userInDatabase = await User.findOne({ username: req.body.username });
 
     if (userInDatabase) {
-      return res.status(409).json({ err: "Username already taken." });
+      return res.status(409).json({ erroror: "Username already taken." });
     }
 
     const user = await User.create({
@@ -22,9 +22,9 @@ export const signUp = async (req, res) => {
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
     res.status(201).json({ token });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ err: err.message });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -32,7 +32,7 @@ export const signIn = async (req, res) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
-      return res.status(401).json({ err: "Invalid credentials." });
+      return res.status(401).json({ error: "Invalid credentials." });
     }
 
     const isPasswordCorrect = bcrypt.compareSync(
@@ -40,7 +40,7 @@ export const signIn = async (req, res) => {
       user.hashedPassword,
     );
     if (!isPasswordCorrect) {
-      return res.status(401).json({ err: "Invalid credentials." });
+      return res.status(401).json({ error: "Invalid credentials." });
     }
 
     const payload = { username: user.username, _id: user._id };
@@ -48,7 +48,7 @@ export const signIn = async (req, res) => {
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
 
     res.status(200).json({ token });
-  } catch (err) {
-    res.status(500).json({ err: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
