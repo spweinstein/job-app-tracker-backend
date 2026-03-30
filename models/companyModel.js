@@ -19,12 +19,11 @@ const companySchema = new mongoose.Schema(
     },
 
     url: String,
-    description: String,
     notes: String,
   },
   { timestamps: true },
 );
 
-companySchema.plugin(paginatePlugin); 
+companySchema.plugin(paginatePlugin);
 
 export default mongoose.model("Company", companySchema);

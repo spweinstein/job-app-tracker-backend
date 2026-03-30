@@ -121,7 +121,7 @@ const createResume = async (req, res) => {
       req.body.parent = null;
       req.body.root = null;
     }
-    console.log(req.body);
+    // console.log(req.body);
     const resume = await Resume.create(req.body);
     res.status(201).json(resume);
   } catch (error) {
@@ -185,7 +185,6 @@ const getResume = async (req, res) => {
       .populate("children");
 
     res.json(resume);
-    console.log(resume);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

@@ -9,7 +9,7 @@ export const signUp = async (req, res) => {
     const userInDatabase = await User.findOne({ username: req.body.username });
 
     if (userInDatabase) {
-      return res.status(409).json({ erroror: "Username already taken." });
+      return res.status(409).json({ error: "Username already taken." });
     }
 
     const user = await User.create({

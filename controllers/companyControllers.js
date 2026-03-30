@@ -5,7 +5,6 @@ export const getCompanies = async (req, res) => {
   try {
     // const companies = await Company.find({ author: req.user._id });
     const companies = await Company.paginate(req, { author: req.user._id });
-    console.log(companies);
     res.json(companies);
   } catch (error) {
     console.log(`Error at getCompanies: ${error}`);
