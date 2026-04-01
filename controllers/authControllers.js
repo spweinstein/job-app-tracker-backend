@@ -4,6 +4,16 @@ import User from "../models/userModel.js";
 
 const saltRounds = 12;
 
+const JWT_EXPIRATION = process.env.JWT_EXPIRATION;
+if (!JWT_EXPIRATION) {
+  throw new Error("JWT_EXPIRATION is not set");
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not set");
+}
+
 export const signUp = async (req, res) => {
   try {
     const userInDatabase = await User.findOne({ username: req.body.username });
@@ -19,8 +29,15 @@ export const signUp = async (req, res) => {
 
     const payload = { username: user.username, _id: user._id };
 
-    const token = jwt.sign({ payload }, process.env.JWT_SECRET);
-
+    const token = jwt.sign(
+      {
+        payload,
+      },
+      JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRATION,
+      },
+    );
     res.status(201).json({ token });
   } catch (error) {
     console.log(error);
@@ -45,7 +62,15 @@ export const signIn = async (req, res) => {
 
     const payload = { username: user.username, _id: user._id };
 
-    const token = jwt.sign({ payload }, process.env.JWT_SECRET);
+    const token = jwt.sign(
+      {
+        payload,
+      },
+      JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRATION,
+      },
+    );
 
     res.status(200).json({ token });
   } catch (error) {
