@@ -8,9 +8,10 @@ import chalk from "chalk";
 
 const app = express();
 
-const frontendUrl = process.env.PRODUCTION
-  ? process.env.FRONTEND_URL_PROD
-  : process.env.FRONTEND_URL_DEV;
+const frontendUrl =
+  process.env.PRODUCTION === "true"
+    ? process.env.FRONTEND_URL_PROD
+    : process.env.FRONTEND_URL_DEV;
 if (!frontendUrl) {
   throw new Error("FRONTEND_URL is not set");
 } else if (process.env.PRODUCTION) {
@@ -18,6 +19,7 @@ if (!frontendUrl) {
 } else {
   console.log(chalk.green("Development mode"));
 }
+console.log(chalk.green("Frontend URL: ", frontendUrl));
 
 app.use(logger("dev"));
 app.use(express.json());
