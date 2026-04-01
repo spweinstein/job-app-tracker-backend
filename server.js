@@ -4,12 +4,19 @@ import routes from "./routes/index.js";
 import logger from "morgan";
 import cors from "cors";
 import "dotenv/config";
+import chalk from "chalk";
 
 const app = express();
 
-const frontendUrl = process.env.FRONTEND_URL;
+const frontendUrl = process.env.PRODUCTION
+  ? process.env.FRONTEND_URL_PROD
+  : process.env.FRONTEND_URL_DEV;
 if (!frontendUrl) {
   throw new Error("FRONTEND_URL is not set");
+} else if (process.env.PRODUCTION) {
+  console.log(chalk.green("Production mode"));
+} else {
+  console.log(chalk.green("Development mode"));
 }
 
 app.use(logger("dev"));
