@@ -59,14 +59,15 @@ export const createCompany = async (req, res) => {
 export const deleteCompany = async (req, res) => {
   try {
     const company = await Company.findById(req.params.id);
-    if (!company?.author?.equals(req.user?._id)) {
-      return res.status(403).send("Action not allowed!");
-    }
-    const deletedCompany = await Company.findByIdAndDelete(req.params.id);
-    if (!deletedCompany) {
+    if (!company) {
       return res.status(404).json({ error: "Company not found" });
     }
-    res.json(deletedCompany);
+    if (!company?.author?.equals(req.user?._id)) {
+      return res.status(403).json({ error: "Action not allowed!" });
+    }
+    const deletedCompany = await Company.findByIdAndDelete(req.params.id);
+    if (deletedCompany)
+      res.status(200).json({ message: "Company deleted successfully" });
   } catch (error) {
     if (res.statusCode === 404) {
       res.json({ error: error.message });

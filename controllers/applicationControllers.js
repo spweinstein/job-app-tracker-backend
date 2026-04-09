@@ -80,11 +80,14 @@ export const createApp = async (req, res) => {
 // DELETE "/jobApps/:id"
 export const deleteApp = async (req, res) => {
   try {
-    await Application.findOneAndDelete({
+    const deletedApp = await Application.findOneAndDelete({
       _id: req.params.id,
       user: req.user._id,
     });
-    res.sendStatus(204);
+    if (!deletedApp) {
+      return res.status(404).json({ error: "Application not found" });
+    }
+    res.status(200).json(deletedApp);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
