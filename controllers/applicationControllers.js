@@ -2,7 +2,7 @@ import Application from "../models/applicationModel.js";
 import Company from "../models/companyModel.js";
 import Resume from "../models/resumeModel.js";
 import CoverLetter from "../models/coverLetterModel.js";
-
+import mongoose from "mongoose";
 const SORT_ALLOW_LIST = ["updatedAt", "createdAt", "title", "appliedAt"];
 
 // GET "/jobApps/"
@@ -123,43 +123,59 @@ export const updateApp = async (req, res) => {
 // GET "/jobApps/stats/dashboard"
 export const getDashboardStats = async (req, res) => {
   try {
-    const baseFilter = { user: req.user._id };
+    const userId = new mongoose.Types.ObjectId(req.user._id);
+    const baseFilter = { user: userId };
 
     const now = new Date();
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     weekAgo.setUTCHours(0, 0, 0, 0);
 
-    // Get all applications for this user
-    const allApplications = await Application.find(baseFilter);
+    const bucketArrayToObject = (rows) => {
+      return rows.reduce((acc, { _id, count }) => {
+        acc[_id] = count;
+        return acc;
+      }, {});
+    };
+
+    const m = await Application.aggregate([
+      { $match: baseFilter },
+      { $count: "c" },
+    ]);
+    console.log("aggregate match count", bucketArrayToObject(m));
 
     // Calculate total
-    const total = allApplications.length;
-
-    // Calculate by status (all-time)
-    const byStatus = {};
-    allApplications.forEach((app) => {
-      const status = app.status || "Unknown";
-      byStatus[status] = (byStatus[status] || 0) + 1;
+    const total = await Application.countDocuments(baseFilter);
+    const totalThisWeek = await Application.countDocuments({
+      ...baseFilter,
+      appliedAt: { $gte: weekAgo },
     });
+    // Calculate by status (all-time)
+    const byStatus = bucketArrayToObject(
+      await Application.aggregate([
+        { $match: baseFilter },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
+      ]),
+    );
+    console.log("byStatus", byStatus);
 
     // Calculate by status this week (based on appliedAt)
-    const byStatusThisWeek = {};
-    let totalThisWeek = 0;
-    allApplications.forEach((app) => {
-      const appliedAt = app.appliedAt ? new Date(app.appliedAt) : null;
-      if (appliedAt && appliedAt >= weekAgo) {
-        const status = app.status || "Unknown";
-        byStatusThisWeek[status] = (byStatusThisWeek[status] || 0) + 1;
-        totalThisWeek++;
-      }
-    });
+    const byStatusThisWeek = bucketArrayToObject(
+      await Application.aggregate([
+        { $match: baseFilter },
+        { $match: { appliedAt: { $gte: weekAgo } } },
+        { $group: { _id: "$status", count: { $sum: 1 } } },
+      ]),
+    );
 
     // Calculate by source (all-time)
-    const bySource = {};
-    allApplications.forEach((app) => {
-      const source = app.source || "Unknown";
-      bySource[source] = (bySource[source] || 0) + 1;
-    });
+    const bySource = bucketArrayToObject(
+      await Application.aggregate([
+        { $match: baseFilter },
+        { $group: { _id: "$source", count: { $sum: 1 } } },
+      ]),
+    );
+
+    // Stats with an agg pipeline:
 
     res.json({
       total,
