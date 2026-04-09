@@ -5,9 +5,13 @@ import Application from "../models/applicationModel.js";
 // controllers/resumes.js
 const getResumes = async (req, res) => {
   try {
-    const result = await Resume.paginate(req, { owner: req.user._id }, {
-      populate: ["parent"],
-    });
+    const result = await Resume.paginate(
+      req,
+      { owner: req.user._id },
+      {
+        populate: ["parent"],
+      },
+    );
     return res.json(result);
   } catch (e) {
     console.log(`Error at getResumes: ${e}`);
@@ -159,17 +163,17 @@ const deleteResume = async (req, res) => {
       Application.countDocuments({ resume: req.params.id }),
       Resume.countDocuments({ parent: req.params.id }),
     ]);
-    // if (jobAppCount > 0) {
-    //   return res.status(400).json({
-    //     error: `Cannot delete resume. It has ${jobAppCount} linked job application(s). Please delete those first.`,
-    //   });
-    // }
+    if (jobAppCount > 0) {
+      return res.status(400).json({
+        error: `Cannot delete resume. It has ${jobAppCount} linked job application(s). Please delete those first.`,
+      });
+    }
 
-    // if (childCount > 0) {
-    //   return res.status(400).json({
-    //     error: `Cannot delete resume. It has ${childCount} forked version(s). Please delete those first.`,
-    //   });
-    // }
+    if (childCount > 0) {
+      return res.status(400).json({
+        error: `Cannot delete resume. It has ${childCount} forked version(s). Please delete those first.`,
+      });
+    }
 
     const deletedResume = await Resume.findOneAndDelete({
       _id: req.params.id,
@@ -184,10 +188,4 @@ const deleteResume = async (req, res) => {
   }
 };
 
-export {
-  getResumes,
-  createResume,
-  updateResume,
-  getResume,
-  deleteResume,
-};
+export { getResumes, createResume, updateResume, getResume, deleteResume };

@@ -16,10 +16,13 @@ export const getCompanies = async (req, res) => {
 export const getCompany = async (req, res) => {
   try {
     const company = await Company.findById(req.params.id);
+    if (!company) {
+      return res.status(404).json({ error: "Company not found" });
+    }
     if (!company?.author?.equals(req.user?._id)) {
       return res.status(403).send("Action not allowed!");
     }
-    res.json(company||{});
+    res.json(company || {});
   } catch (error) {
     if (res.statusCode === 404) {
       res.json({ error: error.message });
@@ -40,7 +43,9 @@ export const createCompany = async (req, res) => {
       name: req.body.name,
     });
     if (companyInDatabase) {
-      return res.status(409).json({ error: `Company ${req.body.name} already in database!` });
+      return res
+        .status(409)
+        .json({ error: `Company ${req.body.name} already in database!` });
     }
     const createdCompany = await Company.create(req.body);
     res.status(201).json(createdCompany);
@@ -64,7 +69,7 @@ export const deleteCompany = async (req, res) => {
     res.json(deletedCompany);
   } catch (error) {
     if (res.statusCode === 404) {
-        res.json({ error: error.message });
+      res.json({ error: error.message });
     } else {
       res.status(500).json({ error: error.message });
     }

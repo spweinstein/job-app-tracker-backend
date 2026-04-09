@@ -51,4 +51,5 @@ export const resumeCreateBodySchema = z.object({
 
 export const resumeUpdateBodySchema = z.object({
   ...resumeFields,
+  // Do not allow parent to be changed
 });

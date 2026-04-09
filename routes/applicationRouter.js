@@ -5,6 +5,7 @@ import {
   applicationCreateBodySchema,
   applicationUpdateBodySchema,
 } from "../schemas/applicationSchemas.js";
+import { verifyApplicationRefsOwned } from "../middleware/verifyApplicationRefsOwned.js";
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.get("/:id", controllers.getApplication);
 router.post(
   "/",
   validateBody(applicationCreateBodySchema),
+  verifyApplicationRefsOwned,
   controllers.createApp,
 );
 
@@ -26,6 +28,7 @@ router.delete("/:id", controllers.deleteApp);
 router.put(
   "/:id",
   validateBody(applicationUpdateBodySchema),
+  verifyApplicationRefsOwned,
   controllers.updateApp,
 );
 

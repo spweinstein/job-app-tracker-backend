@@ -5,25 +5,25 @@ export const getUsers = async (req, res) => {
     const users = await User.find({}, "username");
 
     res.json(users);
-  } catch (err) {
-    res.status(500).json({ err: err.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const getUser = async (req, res) => {
   try {
     if (req.user._id !== req.params.userId) {
-      return res.status(403).json({ err: "Unauthorized" });
+      return res.status(403).json({ error: "Unauthorized" });
     }
 
     const user = await User.findById(req.params.userId);
 
     if (!user) {
-      return res.status(404).json({ err: "User not found." });
+      return res.status(404).json({ error: "User not found." });
     }
 
     res.json({ user });
   } catch (err) {
-    res.status(500).json({ err: err.message });
+    res.status(500).json({ error: error.message });
   }
 };
