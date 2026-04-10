@@ -42,9 +42,9 @@ const paginatePlugin = (schema) => {
 
     const filter = { ...baseFilter };
     if (q?.trim()) {
-      const escapedQuery = 
+      const escapedQuery = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       filter.$or = (options.searchFields ?? ["name"]).map((field) => ({
-        [field]: { $regex: q.trim(), $options: "i" },
+        [field]: { $regex: escapedQuery, $options: "i" },
       }));
     }
 

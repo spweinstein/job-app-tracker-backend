@@ -23,7 +23,7 @@ export const getUser = async (req, res) => {
     }
 
     res.json({ user });
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };

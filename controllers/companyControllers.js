@@ -24,12 +24,8 @@ export const getCompany = async (req, res) => {
     }
     res.json(company || {});
   } catch (error) {
-    if (res.statusCode === 404) {
-      res.json({ error: error.message });
-    } else {
-      console.log(`Error at getCompany: ${error}`);
-      res.status(500).json({ error: error.message });
-    }
+    console.log(`Error at getCompany: ${error}`);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -68,12 +64,12 @@ export const deleteCompany = async (req, res) => {
     const deletedCompany = await Company.findByIdAndDelete(req.params.id);
     if (deletedCompany)
       res.status(200).json({ message: "Company deleted successfully" });
-  } catch (error) {
-    if (res.statusCode === 404) {
-      res.json({ error: error.message });
-    } else {
-      res.status(500).json({ error: error.message });
+    else {
+      return res.status(404).json({ error: "Company not found" });
     }
+  } catch (error) {
+    console.log(`Error at deleteCompany: ${error}`);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -81,6 +77,9 @@ export const deleteCompany = async (req, res) => {
 export const updateCompany = async (req, res) => {
   try {
     const company = await Company.findById(req.params.id);
+    if (!company) {
+      return res.status(404).json({ error: "Company not found" });
+    }
     if (!company?.author?.equals(req.user?._id)) {
       return res.status(403).send("Action not allowed!");
     }
@@ -88,16 +87,9 @@ export const updateCompany = async (req, res) => {
       req.params.id,
       req.body,
     );
-    if (!updatedCompany) {
-      res.status(404);
-      throw new Error("Company not found");
-    }
     res.status(200).json(updatedCompany);
   } catch (error) {
-    if (res.statusCode === 404) {
-      res.json({ error: error.message });
-    } else {
-      res.status(500).json({ error: error.message });
-    }
+    console.log(`Error at updateCompany: ${error}`);
+    res.status(500).json({ error: error.message });
   }
 };

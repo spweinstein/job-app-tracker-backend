@@ -47,16 +47,18 @@ const createResume = async (req, res) => {
     req.body.owner = req.user._id;
 
     // Remove root from req.body (it's derived, not user-set)
+    delete req.body.root;
+    req.body.version = await computeVersion(Resume, req.body.parent);
+
+    // Set root based on parent
     if (req.body.parent && req.body.parent !== "") {
       const parent = await Resume.findById(req.body.parent);
       if (parent) {
         req.body.root = parent.root || parent._id;
-        req.body.version = await computeVersion(Resume, req.body.parent); // ADD
       }
     } else {
       req.body.parent = null;
       req.body.root = null;
-      req.body.version = "0"; // ADD (explicit root)
     }
 
     // Clean up empty company references in projects
@@ -75,17 +77,6 @@ const createResume = async (req, res) => {
           delete cert.company;
         }
       });
-    }
-
-    // Set root based on parent
-    if (req.body.parent && req.body.parent !== "") {
-      const parent = await Resume.findById(req.body.parent);
-      if (parent) {
-        req.body.root = parent.root || parent._id;
-      }
-    } else {
-      req.body.parent = null;
-      req.body.root = null;
     }
     // console.log(req.body);
     const resume = await Resume.create(req.body);
@@ -131,6 +122,9 @@ const updateResume = async (req, res) => {
       req.body,
       { new: true },
     );
+    if (!resume) {
+      return res.status(404).json({ error: "Resume not found" });
+    }
     res.json(resume);
   } catch (error) {
     console.error(error);
@@ -150,6 +144,9 @@ const getResume = async (req, res) => {
       .populate("parent")
       .populate("children");
 
+    if (!resume) {
+      return res.status(404).json({ error: "Resume not found" });
+    }
     res.json(resume);
   } catch (error) {
     console.error(error);

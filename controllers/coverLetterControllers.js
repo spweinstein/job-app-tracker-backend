@@ -28,6 +28,9 @@ const getCoverLetter = async (req, res) => {
     })
       .populate("parent")
       .populate("children");
+    if (!coverLetter) {
+      return res.status(404).json({ error: "Cover letter not found" });
+    }
     res.json(coverLetter);
   } catch (error) {
     console.error(error);
@@ -135,6 +138,9 @@ const updateCoverLetter = async (req, res) => {
       req.body,
       { new: true },
     );
+    if (!coverLetter) {
+      return res.status(404).json({ error: "Cover letter not found" });
+    }
     res.json(coverLetter);
   } catch (error) {
     console.error(error);
