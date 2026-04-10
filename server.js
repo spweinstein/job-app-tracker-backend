@@ -3,12 +3,34 @@ import db from "./db/connection.js";
 import routes from "./routes/index.js";
 import logger from "morgan";
 import cors from "cors";
+import "dotenv/config";
+import chalk from "chalk";
 
 const app = express();
 
+const frontendUrl =
+  process.env.PRODUCTION === "true"
+    ? process.env.FRONTEND_URL_PROD
+    : process.env.FRONTEND_URL_DEV;
+if (!frontendUrl) {
+  throw new Error("FRONTEND_URL is not set");
+} else if (process.env.PRODUCTION) {
+  console.log(chalk.green("Production mode"));
+} else {
+  console.log(chalk.green("Development mode"));
+}
+console.log(chalk.green("Frontend URL: ", frontendUrl));
+
 app.use(logger("dev"));
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: frontendUrl,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 app.use("/", routes);
 

@@ -5,11 +5,10 @@ export const getCompanies = async (req, res) => {
   try {
     // const companies = await Company.find({ author: req.user._id });
     const companies = await Company.paginate(req, { author: req.user._id });
-    console.log(companies);
     res.json(companies);
-  } catch (e) {
-    console.log(`Error at getCompanies: ${e}`);
-    res.status(500).json({ error: e.message });
+  } catch (error) {
+    console.log(`Error at getCompanies: ${error}`);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -17,17 +16,16 @@ export const getCompanies = async (req, res) => {
 export const getCompany = async (req, res) => {
   try {
     const company = await Company.findById(req.params.id);
-    if (!company.author.equals(req.user._id)) {
+    if (!company) {
+      return res.status(404).json({ error: "Company not found" });
+    }
+    if (!company?.author?.equals(req.user?._id)) {
       return res.status(403).send("Action not allowed!");
     }
-    res.json(company);
-  } catch (e) {
-    if (res.statusCode === 404) {
-      res.json({ error: e.message });
-    } else {
-      console.log(`Error at getCompany: ${e}`);
-      res.status(500).json({ error: e.message });
-    }
+    res.json(company || {});
+  } catch (error) {
+    console.log(`Error at getCompany: ${error}`);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -41,12 +39,15 @@ export const createCompany = async (req, res) => {
       name: req.body.name,
     });
     if (companyInDatabase) {
-      return res.status(409).json({ err: `Company ${req.body.name} already in database!` });
+      return res
+        .status(409)
+        .json({ error: `Company ${req.body.name} already in database!` });
     }
     const createdCompany = await Company.create(req.body);
     res.status(201).json(createdCompany);
-  } catch (e) {
-    res.status(500).json({ err: e.message });
+  } catch (error) {
+    console.log(`Error at createCompany: ${error}`);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -54,21 +55,21 @@ export const createCompany = async (req, res) => {
 export const deleteCompany = async (req, res) => {
   try {
     const company = await Company.findById(req.params.id);
-    if (!company.author.equals(req.user._id)) {
-      return res.status(403).send("Action not allowed!");
+    if (!company) {
+      return res.status(404).json({ error: "Company not found" });
+    }
+    if (!company?.author?.equals(req.user?._id)) {
+      return res.status(403).json({ error: "Action not allowed!" });
     }
     const deletedCompany = await Company.findByIdAndDelete(req.params.id);
-    if (!deletedCompany) {
-      res.status(404);
-      throw new Error("Company not found");
+    if (deletedCompany)
+      res.status(200).json({ message: "Company deleted successfully" });
+    else {
+      return res.status(404).json({ error: "Company not found" });
     }
-    res.json(deletedCompany);
-  } catch (e) {
-    if (res.statusCode === 404) {
-        res.json({ err: e.message });
-    } else {
-      res.status(500).json({ err: e.message });
-    }
+  } catch (error) {
+    console.log(`Error at deleteCompany: ${error}`);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -76,23 +77,19 @@ export const deleteCompany = async (req, res) => {
 export const updateCompany = async (req, res) => {
   try {
     const company = await Company.findById(req.params.id);
-    if (!company.author.equals(req.user._id)) {
+    if (!company) {
+      return res.status(404).json({ error: "Company not found" });
+    }
+    if (!company?.author?.equals(req.user?._id)) {
       return res.status(403).send("Action not allowed!");
     }
     const updatedCompany = await Company.findByIdAndUpdate(
       req.params.id,
       req.body,
     );
-    if (!updatedCompany) {
-      res.status(404);
-      throw new Error("Company not found");
-    }
     res.status(200).json(updatedCompany);
-  } catch (e) {
-    if (res.statusCode === 404) {
-      res.json({ error: e.message });
-    } else {
-      res.status(500).json({ error: err.message });
-    }
+  } catch (error) {
+    console.log(`Error at updateCompany: ${error}`);
+    res.status(500).json({ error: error.message });
   }
 };

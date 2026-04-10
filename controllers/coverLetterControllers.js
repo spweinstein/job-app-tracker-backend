@@ -4,9 +4,14 @@ import Application from "../models/applicationModel.js";
 // GET "/coverLetters/"
 const getCoverLetters = async (req, res) => {
   try {
-    const result = await CoverLetter.paginate(req, { owner: req.user._id }, {
-      populate: ["parent"],
-    });
+    const result = await CoverLetter.paginate(
+      req,
+      { owner: req.user._id },
+      {
+        populate: ["parent"],
+      },
+    );
+
     res.json(result);
   } catch (error) {
     console.error(error);
@@ -23,6 +28,9 @@ const getCoverLetter = async (req, res) => {
     })
       .populate("parent")
       .populate("children");
+    if (!coverLetter) {
+      return res.status(404).json({ error: "Cover letter not found" });
+    }
     res.json(coverLetter);
   } catch (error) {
     console.error(error);
@@ -84,9 +92,14 @@ const createCoverLetter = async (req, res) => {
 // DELETE "/coverLetters/:id"
 const deleteCoverLetter = async (req, res) => {
   try {
-    const jobAppCount = await Application.countDocuments({
-      coverLetter: req.params.id,
-    });
+    const [jobAppCount, childCount] = await Promise.all([
+      Application.countDocuments({
+        coverLetter: req.params.id,
+      }),
+      CoverLetter.countDocuments({
+        parent: req.params.id,
+      }),
+    ]);
 
     if (jobAppCount > 0) {
       return res.status(400).json({
@@ -94,11 +107,20 @@ const deleteCoverLetter = async (req, res) => {
       });
     }
 
-    await CoverLetter.findOneAndDelete({
+    if (childCount > 0) {
+      return res.status(400).json({
+        error: `Cannot delete resume. It has ${childCount} forked version(s). Please delete those first.`,
+      });
+    }
+
+    const deletedCoverLetter = await CoverLetter.findOneAndDelete({
       _id: req.params.id,
       owner: req.user._id,
     });
-    res.sendStatus(204);
+    if (!deletedCoverLetter) {
+      return res.status(404).json({ error: "Cover letter not found" });
+    }
+    res.status(204).json(deletedCoverLetter);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
@@ -108,28 +130,18 @@ const deleteCoverLetter = async (req, res) => {
 // PUT "/coverLetters/:id"
 const updateCoverLetter = async (req, res) => {
   try {
-    // Check if another coverLetter with this name exists (excluding current coverLetter)
-    const duplicateCoverLetter = await CoverLetter.findOne({
-      owner: req.user._id,
-      name: req.body.name,
-      _id: { $ne: req.params.id }, // Exclude the current coverLetter being updated
-    });
-
-    if (duplicateCoverLetter) {
-      return res
-        .status(409)
-        .json({ error: `CoverLetter ${req.body.name} already in database!` });
-    } else {
-      const coverLetter = await CoverLetter.findOneAndUpdate(
-        {
-          owner: req.user._id,
-          _id: req.params.id,
-        },
-        req.body,
-        { new: true },
-      );
-      res.json(coverLetter);
+    const coverLetter = await CoverLetter.findOneAndUpdate(
+      {
+        owner: req.user._id,
+        _id: req.params.id,
+      },
+      req.body,
+      { new: true },
+    );
+    if (!coverLetter) {
+      return res.status(404).json({ error: "Cover letter not found" });
     }
+    res.json(coverLetter);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

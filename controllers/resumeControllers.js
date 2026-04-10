@@ -3,49 +3,15 @@ import Company from "../models/companyModel.js";
 import Application from "../models/applicationModel.js";
 
 // controllers/resumes.js
-import puppeteer from "puppeteer";
-
-const exportResumePDF = async (req, res) => {
-  try {
-    const { html } = req.body;
-
-    if (!html) {
-      return res.status(400).json({ error: "No HTML provided." });
-    }
-
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    const page = await browser.newPage();
-
-    await page.setContent(html, {
-      waitUntil: ["networkidle0", "load"],
-      timeout: 30000,
-    });
-
-    const pdf = await page.pdf({
-      format: "A4",
-      printBackground: true,
-      margin: { top: "0in", right: "0.5in", bottom: "0.5in", left: "0.5in" },
-    });
-
-    await browser.close();
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename="resume.pdf"`);
-    res.send(pdf);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
 const getResumes = async (req, res) => {
   try {
-    const result = await Resume.paginate(req, { owner: req.user._id }, {
-      populate: ["parent"],
-    });
+    const result = await Resume.paginate(
+      req,
+      { owner: req.user._id },
+      {
+        populate: ["parent"],
+      },
+    );
     return res.json(result);
   } catch (e) {
     console.log(`Error at getResumes: ${e}`);
@@ -81,16 +47,18 @@ const createResume = async (req, res) => {
     req.body.owner = req.user._id;
 
     // Remove root from req.body (it's derived, not user-set)
+    delete req.body.root;
+    req.body.version = await computeVersion(Resume, req.body.parent);
+
+    // Set root based on parent
     if (req.body.parent && req.body.parent !== "") {
       const parent = await Resume.findById(req.body.parent);
       if (parent) {
         req.body.root = parent.root || parent._id;
-        req.body.version = await computeVersion(Resume, req.body.parent); // ADD
       }
     } else {
       req.body.parent = null;
       req.body.root = null;
-      req.body.version = "0"; // ADD (explicit root)
     }
 
     // Clean up empty company references in projects
@@ -110,18 +78,7 @@ const createResume = async (req, res) => {
         }
       });
     }
-
-    // Set root based on parent
-    if (req.body.parent && req.body.parent !== "") {
-      const parent = await Resume.findById(req.body.parent);
-      if (parent) {
-        req.body.root = parent.root || parent._id;
-      }
-    } else {
-      req.body.parent = null;
-      req.body.root = null;
-    }
-    console.log(req.body);
+    // console.log(req.body);
     const resume = await Resume.create(req.body);
     res.status(201).json(resume);
   } catch (error) {
@@ -165,6 +122,9 @@ const updateResume = async (req, res) => {
       req.body,
       { new: true },
     );
+    if (!resume) {
+      return res.status(404).json({ error: "Resume not found" });
+    }
     res.json(resume);
   } catch (error) {
     console.error(error);
@@ -184,8 +144,10 @@ const getResume = async (req, res) => {
       .populate("parent")
       .populate("children");
 
+    if (!resume) {
+      return res.status(404).json({ error: "Resume not found" });
+    }
     res.json(resume);
-    console.log(resume);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
@@ -198,17 +160,17 @@ const deleteResume = async (req, res) => {
       Application.countDocuments({ resume: req.params.id }),
       Resume.countDocuments({ parent: req.params.id }),
     ]);
-    // if (jobAppCount > 0) {
-    //   return res.status(400).json({
-    //     error: `Cannot delete resume. It has ${jobAppCount} linked job application(s). Please delete those first.`,
-    //   });
-    // }
+    if (jobAppCount > 0) {
+      return res.status(400).json({
+        error: `Cannot delete resume. It has ${jobAppCount} linked job application(s). Please delete those first.`,
+      });
+    }
 
-    // if (childCount > 0) {
-    //   return res.status(400).json({
-    //     error: `Cannot delete resume. It has ${childCount} forked version(s). Please delete those first.`,
-    //   });
-    // }
+    if (childCount > 0) {
+      return res.status(400).json({
+        error: `Cannot delete resume. It has ${childCount} forked version(s). Please delete those first.`,
+      });
+    }
 
     const deletedResume = await Resume.findOneAndDelete({
       _id: req.params.id,
@@ -223,11 +185,4 @@ const deleteResume = async (req, res) => {
   }
 };
 
-export {
-  getResumes,
-  createResume,
-  updateResume,
-  getResume,
-  deleteResume,
-  exportResumePDF,
-};
+export { getResumes, createResume, updateResume, getResume, deleteResume };

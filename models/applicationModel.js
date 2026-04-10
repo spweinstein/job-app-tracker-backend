@@ -16,8 +16,11 @@ const applicationSchema = new mongoose.Schema(
     },
     resume: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Resume",
-      required: true,
+      ref: "Document",
+    },
+    coverLetter: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Document",
     },
     title: String,
     status: {
